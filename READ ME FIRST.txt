@@ -1,0 +1,3 @@
+src folder is for .cpp files, include folder is for .h files
+
+data folder is for testing data, docs folder is for the report
