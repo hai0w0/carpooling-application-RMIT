@@ -7,7 +7,7 @@ class Admin {
 public:
     Admin(); // Constructor declaration
 
-    void signup();
+    void viewUserInfo(std::string username);
     void viewCarpoolListings();
 
 private:
