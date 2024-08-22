@@ -4,7 +4,6 @@ build/
 *.out
 
 # Ignore IDE specific files
-.vscode/
 .idea/
 
 # Ignore temporary files
