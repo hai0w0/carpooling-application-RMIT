@@ -18,7 +18,9 @@
             "options": {
                 "cwd": "${workspaceFolder}/src"
             },
-            "problemMatcher": ["$gcc"]
+            "problemMatcher": [
+                "$gcc"
+            ]
         },
         {
             "label": "Run",
