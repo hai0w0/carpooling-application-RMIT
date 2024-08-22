@@ -5,11 +5,10 @@
 
 class Guest {
 public:
-    Guest(); // Constructor declaration
-
+    Guest();
     void signup();
     void viewCarpoolListings();
-
+    
 private:
     std::string username;
     std::string password;
@@ -21,6 +20,9 @@ private:
     int creditPoints;
 
     bool isValidPassword(const std::string& password);
+    bool isValidFullName(const std::string& name);
+    bool isValidEmail(const std::string& email);
+    bool isValidIdType(int idTypeOption);
 };
 
 #endif // GUEST_H

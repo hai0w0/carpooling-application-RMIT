@@ -1,3 +1,88 @@
-src folder is for .cpp files, include folder is for .h files
+To test run the Guest function, please make sure:
 
-data folder is for testing data, docs folder is for the report
+1. You have a .vscode in your root directory, in there, there should be a tasks.json and launch.json. Modify as follow:
++ tasks.json:
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build and Run",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "main.cpp",
+                "Guest.cpp",
+                "-o",
+                "output/main"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/src"
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Run",
+            "type": "shell",
+            "command": "${workspaceFolder}/src/output/main",
+            "dependsOn": "Build and Run",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        }
+    ]
+}
+
++ launch.json:
+{
+  "version": "0.2.0",
+  "configurations": [
+      {
+          "name": "Debug Main",
+          "type": "cppdbg",
+          "request": "launch",
+          "program": "${workspaceFolder}/src/output/main",
+          "args": [],
+          "stopAtEntry": false,
+          "cwd": "${workspaceFolder}/src",
+          "environment": [],
+          "externalConsole": true,
+          "MIMode": "gdb",
+          "setupCommands": [
+              {
+                  "description": "Enable pretty-printing for gdb",
+                  "ignoreFailures": true,
+                  "text": "-enable-pretty-printing"
+              }
+          ],
+          "preLaunchTask": "Build and Run",
+          "miDebuggerPath": "gdb"
+      }
+  ]
+}
+
+2. Go to task.json and press Ctrl + Shift + B. It should print out:
+ *  Executing task: g++ main.cpp Guest.cpp -o output/main 
+
+ *  Terminal will be reused by tasks, press any key to close it. 
+
+3. Go to Terminal and paste this command line:
+ cd src
+g++ main.cpp Guest.cpp -o output/main
+./output/main
+
+4. Press Enter twice and you should see:
+
+Guest Signup:
+
+============SIGN-UP MENU============
+Enter username: 
+
+
+
+****GOOD LUCK****
+
