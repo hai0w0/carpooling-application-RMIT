@@ -74,32 +74,33 @@ Note: Adjust paths and commands according to your specific setup if g++ is locat
 
 -Open VSCode and navigate to the Terminal menu.
 
--Press Ctrl + Shift + B to build and run the project. This will execute the Build and Run task defined in tasks.json.
+-Open a new terminal on VSCode
 
--If the build is successful, the terminal should show:
-
-    Executing task: g++ main.cpp Guest.cpp -o output/main
-
-3.Manual Build and Run
-
--If you encounter issues with VSCode tasks, you can manually build and run the program:
-
-Open a terminal or command prompt.
-Navigate to your src folder:
+-Navigate to your src folder:
     cd src
-Compile the code:
-    g++ main.cpp Guest.cpp -o output/main
-Run the executable:
+-Compile the code:
+    g++ main.cpp Guest.cpp Admin.cpp -o output/main
+-Run the executable:
     ./output/main
 
 4.Verify the Output
 
 -After running the program, you should see the following prompt:
 
-    Guest Signup:
+EEET2482/EEET2653/COSC2082/COSC2721 Group Assignment
+CARPOOLING APPLICATION
+Instructor: Dr. Ling Huo Chong, Dr. Jeff Nijsse
+Group: Group No.
+s4041605, Tran Dinh Hai
+s3996843, Nguyen Phu Minh Quang
+s4045608, Tran Quoc Hung
+s4021259, Tran Van Dat
 
-    ============SIGN-UP MENU============
-    Enter username:
+Use the app as:
+1. Guest
+2. Member
+3. Admin
+Enter your choice:
 
 
 
