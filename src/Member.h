@@ -14,7 +14,7 @@ public:
     void listCarpool();
     void manageRequests();
     void handleCancellation();
-    void rate();
+    void Rating();
     void purchaseCredits();
 
 private:

@@ -97,7 +97,7 @@ void Member::handleCancellation() {
     // Implementation for handling cancellations of bookings or listings
 }
 
-void Member::rate() {
+void Member::Rating() {
     // Implementation to rate a passenger or driver
 }
 

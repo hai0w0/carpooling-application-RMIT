@@ -77,7 +77,7 @@ int main() {
 
 
             case 2: {
-                cout << "You have selected Member mode." << endl;
+                /*cout << "You have selected Member mode." << endl;
                 Member member;
                 member.loadMemberData();
                 bool continueSession = true;
@@ -150,15 +150,17 @@ int main() {
                 // Implement Member mode functionality
                 //1.Login (Quang) (Done)
                 //2.View Profile (Dat)(Done)
+
                 //3.Book car to my list (dat xe de di)
                 //4.Add car to my listing (cho thue xe)
                 //5.View requests for car (xem nguoi muon di xe cua minh)
                 //6.Cancellation (6.1 My booking; 6.2 My Listing) 
                 //7.Rating (7.1 Rate Passenger; 7.2 Rate Driver) (Hung)
+                
                 //8.Purchase Credit. (Hai)(Done)
                 //9.Exit (Hai)(Done)
                 break;
-                }
+                }*/
             }
 
 

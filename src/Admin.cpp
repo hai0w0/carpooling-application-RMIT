@@ -22,15 +22,26 @@ void Admin::loadAdminData() {
     file.close();
 }
 
-bool Admin::login(const std::string& username, const std::string& password) {
-    if (validateCredentials(username, password)) {
-        isAuthenticated = true;
-        std::cout << "Login successful.\n";
-        return true;
-    } else {
-        std::cout << "Login failed. Please check your username and password.\n";
-        return false;
+bool Admin::login(const std::string& enteredUsername, const std::string& enteredPassword) {
+    std::ifstream file("admin.csv");
+    std::string line, username, password;
+    std::getline(file, line); // Skip header
+
+    while (getline(file, line)) {
+        std::istringstream iss(line);
+        getline(iss, username, ',');
+        getline(iss, password, ',');
+        if (enteredUsername == username && enteredPassword == password) {
+            isAuthenticated = true;
+            std::cout << "Login successful.\n";
+            file.close();
+            return true;
+        }
     }
+
+    std::cout << "Login failed. Please check your username and password.\n";
+    file.close();
+    return false;
 }
 
 void Admin::viewAllUsers() const {
