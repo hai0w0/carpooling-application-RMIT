@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Guest.h"
 #include "Admin.h"
+#include "Member.h"
 using namespace std;
 
 void showWelcomeScreen() {
@@ -77,17 +78,87 @@ int main() {
 
             case 2: {
                 cout << "You have selected Member mode." << endl;
+                Member member;
+                member.loadMemberData();
+                bool continueSession = true;
+                bool isLoggedIn = false;
+
+                while (!isLoggedIn) {
+                    string Member_username, Member_password;
+                    cout << "Enter username: ";
+                    cin >> Member_username;
+                    cout << "Enter password: ";
+                    cin >> Member_password;
+                    if (member.login(Member_username, Member_password)) {
+                    cout << "Logged in successfully.\n";
+                    isLoggedIn = true; // Set the login flag to true
+                    } else {
+                        cout << "Login failed. Please try again.\n";
+                    }
+                }
+
+                while (continueSession && isLoggedIn) {
+                    cout << "\nPlease choose an option:" << endl;
+                    cout << "1. View your Profile Information" << endl;
+                    cout << "2. Manage your Carpool Booking" << endl;
+                    cout << "3. Book Carpool (Become a passenger)" << endl;
+                    cout << "4. List Carpool (Become a driver)" << endl;
+                    cout << "5. Manage your Passenger' requests" << endl;
+                    cout << "6. Cancellation" << endl;
+                    cout << "7. Rating" << endl;
+                    cout << "8. Purchase Credit" << endl;
+                    cout << "9. Exit" << endl;
+                    cout << "Enter your choice: ";
+                    int memberChoice;
+                    cin >> memberChoice;
+
+                    switch (memberChoice) {
+                        case 1:
+                            cout << "\n================= Profile Information =================\n";
+                            member.viewProfile();
+                            break;
+                        case 2:
+                            
+                            break;
+                        case 3:
+                            
+                            break;
+                        case 4:
+                            
+                            break;
+                        case 5:
+                            
+                            break;
+                        case 6:
+                            
+                            break;
+                        case 7:
+                            
+                            break;
+                        case 8:
+                            cout << "You have chosen the Purchase Credit option. Each credit is worth $1." << endl;
+                            member.purchaseCredits();
+                            break;
+                        case 9:
+                            cout << "Exiting Member mode...\n";
+                            continueSession = false; // Exit the member session
+                            break;
+                        default:
+                            cout << "Invalid choice, please try again." << endl;
+                            break;
+                    }
                 // Implement Member mode functionality
-                //1.Login (Quang)
-                //2.View Profile (Dat)
+                //1.Login (Quang) (Done)
+                //2.View Profile (Dat)(Done)
                 //3.Book car to my list (dat xe de di)
                 //4.Add car to my listing (cho thue xe)
                 //5.View requests for car (xem nguoi muon di xe cua minh)
                 //6.Cancellation (6.1 My booking; 6.2 My Listing) 
                 //7.Rating (7.1 Rate Passenger; 7.2 Rate Driver) (Hung)
-                //8.Purchase Credit. (Hai)
-                //9.Exit (Hai)
+                //8.Purchase Credit. (Hai)(Done)
+                //9.Exit (Hai)(Done)
                 break;
+                }
             }
 
 
@@ -97,55 +168,56 @@ int main() {
                 Admin admin;
                 admin.loadAdminData(); // Assuming this method sets up admin credentials
                 bool continueSession = true;
+                bool isLoggedIn = false; // Flag to check if the admin is logged in
 
-                while (continueSession){
+    // Prompt for login before showing admin menu
+                while (!isLoggedIn) {
+                    string Admin_username, Admin_password;
+                    cout << "Enter username: ";
+                    cin >> Admin_username;
+                    cout << "Enter password: ";
+                    cin >> Admin_password;
+                    if (admin.login(Admin_username, Admin_password)) {
+                    cout << "Logged in successfully.\n";
+                    isLoggedIn = true; // Set the login flag to true
+                    } else {
+                        cout << "Login failed. Please try again.\n";
+                    }
+                }
+
+                // Continue with the admin menu after successful login
+                while (continueSession && isLoggedIn) {
                     cout << "\nPlease choose an option:" << endl;
-                    cout << "1. Login" << endl;
-                    cout << "2. View All User Information" << endl;
-                    cout << "3. View All Carpool Information" << endl;
-                    cout << "4. Exit" << endl;
+                    cout << "1. View All User Information" << endl;
+                    cout << "2. View All Carpool Information" << endl;
+                    cout << "3. Exit" << endl;
                     cout << "Enter your choice: ";
                     int adminChoice;
                     cin >> adminChoice;
 
-                    switch(adminChoice){
-                        case 1: {
-                            // Scoping for local variables
-                            string Admin_username, Admin_password;
-                            cout << "Enter username: ";
-                            cin >> Admin_username;
-                            cout << "Enter password: ";
-                            cin >> Admin_password;
-                            if (admin.login(Admin_username, Admin_password)) {
-                                cout << "Logged in successfully.\n";
-                            } else {
-                                cout << "Login failed.\n";
-                            }
-                            break;
-                        }
-                        case 2:
+                    switch (adminChoice) {
+                        case 1:
                             admin.viewAllUsers();
                             break;
-                        case 3:
+                        case 2:
                             admin.viewAllCarpools();
                             break;
-                        case 4:
+                        case 3:
                             cout << "Exiting Admin mode...\n";
                             continueSession = false; // Exit the admin session
                             break;
                         default:
                             cout << "Invalid choice, please try again." << endl;
                             break;
-                        }
+                    }
                 }
                 break;
             }
-
-
             default:
                 cout << "Invalid choice, please try again." << endl;
                 break;
         }
+
 
         // Ask if user wants to continue or exit
         cout << "\nDo you want to continue (Yes/No)? ";
