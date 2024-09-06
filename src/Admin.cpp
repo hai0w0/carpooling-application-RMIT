@@ -4,7 +4,6 @@
 #include <sstream>
 
 Admin::Admin() : isAuthenticated(false) {}
-
 void Admin::loadAdminData() {
     std::ifstream file("admin.csv");
     std::string line;

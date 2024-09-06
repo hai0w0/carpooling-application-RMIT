@@ -2,6 +2,7 @@
 #include "Guest.h"
 #include "Admin.h"
 #include "Member.h"
+#include "Carpool.h"
 using namespace std;
 
 void showWelcomeScreen() {
@@ -50,54 +51,52 @@ int main() {
                     cout << "3. Exit" << endl;
                     cout << "Enter your choice: ";
         
-                int guestChoice;
-                cin >> guestChoice;
+                    int guestChoice;
+                    cin >> guestChoice;
         
-                switch (guestChoice) {
-                    case 1:
-                        cout << "Guest Signup:\n";
-                        guest.signup();
-                        break;
-                    case 2:
-                        cout << "Viewing carpool listings as a guest:\n";
-                        guest.viewCarpoolListings();
-                        break;
-                    case 3:
-                        cout << "Exiting Guest mode...\n";
-                        continueGuestSession = false; // Exit the guest session
-                        break;
-                    default:
-                        cout << "Invalid choice, please try again." << endl;
-                        break;
+                    switch (guestChoice) {
+                        case 1:
+                            cout << "Guest Signup:\n";
+                            guest.signup();
+                            break;
+                        case 2:
+                            cout << "Viewing carpool listings as a guest:\n";
+                            guest.viewCarpoolListings();
+                            break;
+                        case 3:
+                            cout << "Exiting Guest mode...\n";
+                            continueGuestSession = false; // Exit the guest session
+                            break;
+                        default:
+                            cout << "Invalid choice, please try again." << endl;
+                            break;
                     }
                 }
                 break;
             }
 
-
-
             case 2: {
-                /*cout << "You have selected Member mode." << endl;
+                cout << "You have selected Member mode." << endl;
                 Member member;
                 member.loadMemberData();
-                bool continueSession = true;
-                bool isLoggedIn = false;
+                bool MembercontinueSession = true;
+                bool MemberisLoggedIn = false;
 
-                while (!isLoggedIn) {
+                while (!MemberisLoggedIn) {
                     string Member_username, Member_password;
                     cout << "Enter username: ";
                     cin >> Member_username;
                     cout << "Enter password: ";
                     cin >> Member_password;
                     if (member.login(Member_username, Member_password)) {
-                    cout << "Logged in successfully.\n";
-                    isLoggedIn = true; // Set the login flag to true
+                        cout << "Logged in successfully.\n";
+                        MemberisLoggedIn = true; // Set the login flag to true
                     } else {
                         cout << "Login failed. Please try again.\n";
                     }
                 }
 
-                while (continueSession && isLoggedIn) {
+                while (MembercontinueSession && MemberisLoggedIn) {
                     cout << "\nPlease choose an option:" << endl;
                     cout << "1. View your Profile Information" << endl;
                     cout << "2. Manage your Carpool Booking" << endl;
@@ -116,24 +115,31 @@ int main() {
                         case 1:
                             cout << "\n================= Profile Information =================\n";
                             member.viewProfile();
+                            cout << "Finish view profile";
                             break;
                         case 2:
-                            
+                            cout << "\nYou haven chosen to book carpool\n";
+                            member.bookCarpool();
                             break;
                         case 3:
-                            
+                            // Implement Book Carpool functionality
+                            cout << "Book Carpool functionality not implemented yet.\n";
                             break;
                         case 4:
-                            
+                            // Implement List Carpool functionality
+                            cout << "List Carpool functionality not implemented yet.\n";
                             break;
                         case 5:
-                            
+                            // Implement Manage Passenger Requests functionality
+                            cout << "Manage Passenger Requests functionality not implemented yet.\n";
                             break;
                         case 6:
-                            
+                            // Implement Cancellation functionality
+                            cout << "Cancellation functionality not implemented yet.\n";
                             break;
                         case 7:
-                            
+                            // Implement Rating functionality
+                            cout << "Rating functionality not implemented yet.\n";
                             break;
                         case 8:
                             cout << "You have chosen the Purchase Credit option. Each credit is worth $1." << endl;
@@ -141,29 +147,15 @@ int main() {
                             break;
                         case 9:
                             cout << "Exiting Member mode...\n";
-                            continueSession = false; // Exit the member session
+                            MembercontinueSession = false; // Exit the member session
                             break;
                         default:
                             cout << "Invalid choice, please try again." << endl;
                             break;
                     }
-                // Implement Member mode functionality
-                //1.Login (Quang) (Done)
-                //2.View Profile (Dat)(Done)
-
-                //3.Book car to my list (dat xe de di)
-                //4.Add car to my listing (cho thue xe)
-                //5.View requests for car (xem nguoi muon di xe cua minh)
-                //6.Cancellation (6.1 My booking; 6.2 My Listing) 
-                //7.Rating (7.1 Rate Passenger; 7.2 Rate Driver) (Hung)
-                
-                //8.Purchase Credit. (Hai)(Done)
-                //9.Exit (Hai)(Done)
-                break;
-                }*/
+                }
+                break; // This break is for the case 2 of the main switch
             }
-
-
 
             case 3: {
                 cout << "You have selected Admin mode." << endl;
@@ -172,7 +164,7 @@ int main() {
                 bool continueSession = true;
                 bool isLoggedIn = false; // Flag to check if the admin is logged in
 
-    // Prompt for login before showing admin menu
+                // Prompt for login before showing admin menu
                 while (!isLoggedIn) {
                     string Admin_username, Admin_password;
                     cout << "Enter username: ";
@@ -180,8 +172,8 @@ int main() {
                     cout << "Enter password: ";
                     cin >> Admin_password;
                     if (admin.login(Admin_username, Admin_password)) {
-                    cout << "Logged in successfully.\n";
-                    isLoggedIn = true; // Set the login flag to true
+                        cout << "Logged in successfully.\n";
+                        isLoggedIn = true; // Set the login flag to true
                     } else {
                         cout << "Login failed. Please try again.\n";
                     }
@@ -219,7 +211,6 @@ int main() {
                 cout << "Invalid choice, please try again." << endl;
                 break;
         }
-
 
         // Ask if user wants to continue or exit
         cout << "\nDo you want to continue (Yes/No)? ";

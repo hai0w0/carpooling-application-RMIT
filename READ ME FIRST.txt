@@ -79,7 +79,7 @@ Note: Adjust paths and commands according to your specific setup if g++ is locat
 -Navigate to your src folder:
     cd src
 -Compile the code:
-    g++ main.cpp Guest.cpp Admin.cpp -o output/main
+    g++ main.cpp Guest.cpp Admin.cpp Member.cpp -o output/main
 -Run the executable:
     ./output/main
 

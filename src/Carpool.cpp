@@ -1,61 +1,43 @@
-/*#include "Carpool.h"
-#include <iostream>
+// Carpool.cpp
+#include "Carpool.h"
+#include <sstream>
 
-using namespace std;
+Carpool::Carpool(const std::string &departureLocation, const std::string &destinationLocation,
+                 const std::string &departureTime, const std::string &date, const std::string &vehicleModel,
+                 const std::string &vehicleColor, const std::string &plateNumber, int availableSeats,
+                 double contributionPerPassenger, double rating)
+: departureLocation(departureLocation), destinationLocation(destinationLocation),
+  departureTime(departureTime), date(date), vehicleModel(vehicleModel), vehicleColor(vehicleColor),
+  plateNumber(plateNumber), availableSeats(availableSeats), contributionPerPassenger(contributionPerPassenger),
+  rating(rating) {}
 
-Carpool::Carpool(const std::string& driverUsername, const std::string& departureLocation, 
-                 const std::string& destinationLocation, const std::string& date, 
-                 const std::string& time, const std::string& vehicleModel, 
-                 const std::string& vehicleColor, const std::string& vehiclePlate, 
-                 int availableSeats, int contributionPerPassenger)
-    : driverUsername(driverUsername), departureLocation(departureLocation), 
-      destinationLocation(destinationLocation), date(date), time(time), vehicleModel(vehicleModel), 
-      vehicleColor(vehicleColor), vehiclePlate(vehiclePlate), availableSeats(availableSeats), 
-      contributionPerPassenger(contributionPerPassenger), isActive(true) {}
-
-std::string Carpool::getDriverUsername() const {
-    return driverUsername;
+const std::string& Carpool::getDepartureLocation() const {
+    return departureLocation;
 }
 
-void Carpool::displayDetails() const {
-    cout << "Driver: " << driverUsername << endl;
-    cout << "Departure: " << departureLocation << endl;
-    cout << "Destination: " << destinationLocation << endl;
-    cout << "Date: " << date << endl;
-    cout << "Time: " << time << endl;
-    cout << "Vehicle: " << vehicleModel << " (" << vehicleColor << ", Plate: " << vehiclePlate << ")" << endl;
-    cout << "Available Seats: " << availableSeats << endl;
-    cout << "Contribution per Passenger: " << contributionPerPassenger << " points" << endl;
+const std::string& Carpool::getDestinationLocation() const {
+    return destinationLocation;
 }
 
-void Carpool::addPassenger(const std::string& passengerUsername) {
-    if (availableSeats > 0) {
-        passengers.push_back(passengerUsername);
-        availableSeats--;
-    }
+const std::string& Carpool::getDate() const {
+    return date;
 }
 
-void Carpool::removePassenger(const std::string& passengerUsername) {
-    auto it = find(passengers.begin(), passengers.end(), passengerUsername);
-    if (it != passengers.end()) {
-        passengers.erase(it);
-        availableSeats++;
-    }
+int Carpool::getAvailableSeats() const {
+    return availableSeats;
 }
 
-bool Carpool::isSeatAvailable() const {
-    return availableSeats > 0;
+double Carpool::getContributionPerPassenger() const {
+    return contributionPerPassenger;
 }
 
-bool Carpool::isListingActive() const {
-    return isActive;
+double Carpool::getRating() const {
+    return rating;
 }
 
-void Carpool::deactivateListing() {
-    isActive = false;
+std::string Carpool::getCarpoolDetails() const {
+    std::ostringstream details;
+    details << departureLocation << " to " << destinationLocation
+            << " on " << date << " - " << vehicleModel << " (" << vehicleColor << ")";
+    return details.str();
 }
-
-void Carpool::activateListing() {
-    isActive = true;
-}
-*/

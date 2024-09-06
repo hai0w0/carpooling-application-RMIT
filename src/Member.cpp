@@ -1,33 +1,39 @@
 #include "Member.h"
+#include "Carpool.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <string>
+#include <map>
+#include <iomanip>
 
-Member::Member() : isAuthenticated(false) {}
+Member::Member() : isMemberAuthenticated(false) {}
 
 void Member::loadMemberData() {
-    // Example: Load data from a file or a database
     std::ifstream file("members.csv");
     std::string line;
+    getline(file, line);  // Skip the header
     while (getline(file, line)) {
         std::istringstream iss(line);
         std::string username, password;
         getline(iss, username, ',');
         getline(iss, password, ',');
-        // Assuming first line as header
-        if (username != "username") { 
-            this->username = username;
-            this->password = password;
-        }
+        memberCredentials[username] = {username, password};
     }
     file.close();
 }
 
-bool Member::login(const std::string& username, const std::string& password) {
-    // This would typically check against stored data
-    if (validateCredentials(username, password)) {
-        isAuthenticated = true;
+bool Member::validateCredentials(const std::string& username, const std::string& password) const {
+    auto it = memberCredentials.find(username);
+    return it != memberCredentials.end() && it->second.second == password;
+}
+
+bool Member::login(const std::string& inputUsername, const std::string& inputPassword) {
+    if (validateCredentials(inputUsername, inputPassword)) {
+        isMemberAuthenticated = true;
+        username = inputUsername;
+        password = inputPassword;
         std::cout << "Login successful.\n";
         return true;
     } else {
@@ -37,52 +43,96 @@ bool Member::login(const std::string& username, const std::string& password) {
 }
 
 void Member::viewProfile() const {
-    if (!isAuthenticated) {
+    if (!isMemberAuthenticated) {
         std::cout << "Access denied. Please log in first.\n";
         return;
     }
 
     std::ifstream file("members.csv");
     if (!file.is_open()) {
-        std::cout << "Failed to open profile data file.\n";
+        std::cerr << "Error: Failed to open profile data file.\n";
         return;
     }
 
     std::string line;
-    while (getline(file, line)) {
-        std::stringstream ss(line);
+    bool found = false;
+    // Skip the header line
+    std::getline(file, line);
+    while (std::getline(file, line)) {
+        std::istringstream ss(line);
         std::vector<std::string> userDetails;
         std::string detail;
 
-        // Parse the line into details
-        while (getline(ss, detail, ';')) {
+        while (std::getline(ss, detail, ',')) {
             userDetails.push_back(detail);
         }
 
-        // Check if it's the correct user
-        if (userDetails.size() >= 8 && userDetails[0] == username && userDetails[1] == password) {
-            std::cout << "Your Profile Information:\n";
-            std::cout << "Username: " << userDetails[0] << "\n";
-            std::cout << "Full Name: " << userDetails[2] << "\n";
-            std::cout << "Phone Number: " << userDetails[3] << "\n";
-            std::cout << "Email: " << userDetails[4] << "\n";
-            std::cout << "ID Type: " << userDetails[5] << "\n";
-            std::cout << "ID Number: " << userDetails[6] << "\n";
-            std::cout << "Credit Points: " << userDetails[7] << "\n";
+        if (userDetails.size() >= 7 && userDetails[0] == username) {
+            found = true;
+            std::cout << "\n=============== Your Profile Information ===============\n";
+            std::cout << std::left << std::setw(20) << "Username:" << userDetails[0] << "\n";
+            std::cout << std::left << std::setw(20) << "Full Name:" << userDetails[2] << "\n";
+            std::cout << std::left << std::setw(20) << "Phone Number:" << userDetails[3] << "\n";
+            std::cout << std::left << std::setw(20) << "Email:" << userDetails[4] << "\n";
+            std::cout << std::left << std::setw(20) << "ID Type:" << userDetails[5] << "\n";
+            std::cout << std::left << std::setw(20) << "ID Number:" << userDetails[6] << "\n";
+            std::cout << std::left << std::setw(20) << "Credit Points:" << userDetails[7] << "\n";
+            std::cout << "========================================================\n";
             break;
         }
     }
 
     file.close();
+
+    if (!found) {
+        std::cerr << "Error: User profile not found in the database.\n";
+    }
 }
 
 
-void Member::manageBookings() {
-    // Implementation to manage existing bookings
-}
 
 void Member::bookCarpool() {
-    // Implementation to book a new carpool
+    int choice;
+    std::cout << "Choose an option:\n";
+    std::cout << "1. Search active carpools\n";
+    std::cout << "2. View your active bookings\n";
+    std::cin >> choice;
+
+    if (choice == 1) {
+        searchActiveCarpool();
+    } else if (choice == 2) {
+        manageBookings();
+    } else {
+        std::cout << "Invalid choice. Please try again.\n";
+    }
+}
+
+void Member::searchActiveCarpool() {
+    std::ifstream file("carpool.csv");
+    std::string line;
+    std::vector<std::string> carpools;
+
+    // Read and display active carpools
+    while (std::getline(file, line)) {
+        carpools.push_back(line);
+        std::cout << carpools.size() << ". " << line << std::endl;
+    }
+
+    // Let user choose a carpool
+    int choice;
+    std::cout << "Enter the number of the carpool you want to book (0 to cancel): ";
+    std::cin >> choice;
+
+    if (choice > 0 && choice <= carpools.size()) {
+        // Book the chosen carpool (implementation details to be added)
+        std::cout << "You've booked: " << carpools[choice-1] << std::endl;
+    } else if (choice != 0) {
+        std::cout << "Invalid choice. Booking cancelled.\n";
+    }
+}
+
+void Member::manageBookings() {
+    // Implementation to be added
 }
 
 void Member::listCarpool() {
@@ -97,13 +147,12 @@ void Member::handleCancellation() {
     // Implementation for handling cancellations of bookings or listings
 }
 
-void Member::Rating() {
+void Member::rating() {
     // Implementation to rate a passenger or driver
 }
 
-
 void Member::purchaseCredits() {
-    if (!isAuthenticated) {
+    if (!isMemberAuthenticated) {
         std::cout << "Access denied. Please log in first.\n";
         return;
     }
@@ -141,18 +190,18 @@ void Member::purchaseCredits() {
         std::vector<std::string> userDetails;
         std::string detail;
         
-        while (getline(ss, detail, ';')) {
+        while (getline(ss, detail, ',')) {
             userDetails.push_back(detail);
         }
 
-        if (userDetails.size() >= 8 && userDetails[0] == username && userDetails[1] == password) {
-            int currentCredits = std::stoi(userDetails[7]);
+        if (userDetails.size() >= 7 && userDetails[0] == username) {
+            int currentCredits = std::stoi(userDetails[6]);
             currentCredits += purchaseAmount;
-            userDetails[7] = std::to_string(currentCredits);
+            userDetails[6] = std::to_string(currentCredits);
             std::stringstream updatedLine;
             for (size_t i = 0; i < userDetails.size(); ++i) {
                 updatedLine << userDetails[i];
-                if (i < userDetails.size() - 1) updatedLine << ";";
+                if (i < userDetails.size() - 1) updatedLine << ",";
             }
             line = updatedLine.str();
             updated = true;
@@ -178,9 +227,4 @@ void Member::purchaseCredits() {
     } else {
         std::cout << "Failed to update credits.\n";
     }
-}
-
-
-bool Member::validateCredentials(const std::string& username, const std::string& password) const {
-    return this->username == username && this->password == password; // Simplified check
 }
