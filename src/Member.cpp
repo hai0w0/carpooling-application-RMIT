@@ -7,6 +7,7 @@
 #include <string>
 #include <map>
 #include <iomanip>
+#include <ctype.h>
 
 Member::Member() : isMemberAuthenticated(false) {}
 
@@ -94,7 +95,7 @@ void Member::viewProfile() const {
 void Member::bookCarpool() {
     int choice;
     std::cout << "Choose an option:\n";
-    std::cout << "1. Search active carpools\n";
+    std::cout << "1. Search and book active carpools\n";
     std::cout << "2. View your active bookings\n";
     std::cin >> choice;
 
@@ -117,18 +118,167 @@ void Member::searchActiveCarpool() {
         carpools.push_back(line);
         std::cout << carpools.size() << ". " << line << std::endl;
     }
+    //Pull request start
+    //Clear the line and carpool vector for use in the switch-case while-loop below
+    line.clear();
+    carpools.clear();
 
-    // Let user choose a carpool
-    int choice;
-    std::cout << "Enter the number of the carpool you want to book (0 to cancel): ";
-    std::cin >> choice;
+    //Print instruction
+    cout    << "-------------------------\n"
+            << "To book a carpool; type 'book', following by the corresponding number.\n"
+            << "T filter available carpool by departure location and destination location; type:\n"
+            << " 'destination' or 'depature', following by the city name.\n" << endl
+        
+            << "For instance, to book carpool number 8, type 'book 8'.\n"
+            << "To filter depature from Hanoi, type 'departure Hanoi'.\n"
+            << "To filter destination to Danang, type 'destination Danang'.\n" << endl 
 
-    if (choice > 0 && choice <= carpools.size()) {
-        // Book the chosen carpool (implementation details to be added)
-        std::cout << "You've booked: " << carpools[choice-1] << std::endl;
-    } else if (choice != 0) {
-        std::cout << "Invalid choice. Booking cancelled.\n";
-    }
+            << "Type 'cancel' to cancel the booking process.\n"
+            << "To view this instruction again, type '?' or 'help'."<< endl
+            << "-------------------------";
+    
+    while (true) {
+        // Let user choose an option from: filtering, display instruction or cancel
+        std::string choice, parameter;
+        std::cout << "Enter the input (caution: the input is case-sensitive): ";
+        std::cin >> choice >> parameter;
+
+        //If the first value is not valid
+        if (choice != "destination" || choice != "departure" || choice != 'help' || choice != '?' || choice != 'cancel') {
+            cout << "Invalid choice. Booking cancelled.\n"
+            continue;
+        }
+
+        //If the first value is valid, but the second value is invalid for two specific case
+        //Case 1. Destination and departure is entered, but the second parameter is not a string
+        if (choice == 'destination' || choice == 'departure') {
+            parameterLength = strlen(parameter);
+            for (int i = 0; i < parameterLength; i++) {
+                if (isdigit(parameter[i])) {
+                    cout << "Invalid choice. Booking cancelled.\n"
+                    continue;
+                } 
+            }
+        }
+
+        //Case 2. Book is entered, but the second parameter is not a number
+        if (choice == 'book') {
+            parameterLength = strlen(parameter);
+            for (int i = 0; i < parameterLength; i++) {
+                if !isdigit(parameter[i]) {
+                    cout << "Invalid choice. Booking cancelled.\n"
+                    continue;
+                } 
+            }
+        }
+
+        /*
+        Psuedo code of the switch-case while-loop below:
+        1. If the case is filter destination/departure location, do the following:
+        - Read one line of the carpool data file, until the eol is met; while the carpool file still contain data
+        - Save the first and second value of the aforementioned line to two string variable, namely desData and departData
+        - Compare accordingly if the user parameter is == to desData or departData
+        - If true, print out the desData and departData manually, then print out the remaning data from the line using vector. Then continue loop
+        - If false, print out the error. Then continue loop.
+        
+        2. If the case is '?' or 'help':
+        - Print out the instruction again, then continue loop.
+        
+        3. If the case is book:
+        - ...
+        */
+        switch ('choice') {
+            case 'destination':
+                //Open the carpool file
+                std::getline(file, outputLine); // Skip header
+                std::string line, departure, destination;
+                
+                while (std::getline(file, line)) {
+                    std::istringstream iss(line);
+                    
+                    std::getline(iss, departure, ',');
+                    std::getline(iss, destination, ',');
+
+                    if (parameter == destination) {
+                        cout << departure << ", " << destination << ", ";
+                        while (std::getline(iss, line)) {
+                            carpools.push_back(line);
+                            std::cout << carpools.size() << ". " << line << std::endl;
+                        }
+                        continue;
+                    }
+                    //If there are no carpool with destination = to the given name
+                    cout    << "There are no available carpool with the destination to " << parameter << ".\n"
+                            << "Please try again.\n";  
+                        continue;
+                    
+            case 'departure':
+                //Open the carpool file
+                std::getline(file, outputLine); // Skip header
+                std::string line, departure, destination;
+                
+                while (std::getline(file, line)) {
+                    
+                    std::istringstream iss(line);
+                    std::getline(iss, departure, ',');
+
+                    if (parameter == departure) {
+                        cout << departure << ", ";
+                        while (std::getline(iss, line)) {
+                            carpools.push_back(line);
+                            std::cout << carpools.size() << ". " << line << std::endl;
+                        }
+                        continue;
+                    }
+                    //If there are no carpool with destination = to the given name
+                    cout    << "There are no available carpool with the departure from " << parameter << ".\n"
+                            << "Please try again.\n";  
+                        continue;
+
+            case 'help':
+                cout    << "-------------------------\n"
+                        << "To book a carpool; type 'book', following by the corresponding number.\n"
+                        << "T filter available carpool by departure location and destination location; type:\n"
+                        << " 'destination' or 'depature', following by the city name.\n" << endl
+        
+                        << "For instance, to book carpool number 8, type 'book 8'.\n"
+                        << "To filter depature from Hanoi, type 'departure Hanoi'.\n"
+                        << "To filter destination to Danang, type 'destination Danang'.\n" << endl 
+
+                        << "Type 'cancel' to cancel the booking process.\n"
+                        << "To view this instruction again, type '?' or 'help'."<< endl
+                        << "-------------------------";
+                    continue;
+                    
+            case '?':
+                cout    << "-------------------------\n"
+                        << "To book a carpool; type 'book', following by the corresponding number.\n"
+                        << "T filter available carpool by departure location and destination location; type:\n"
+                        << " 'destination' or 'depature', following by the city name.\n" << endl
+        
+                        << "For instance, to book carpool number 8, type 'book 8'.\n"
+                        << "To filter depature from Hanoi, type 'departure Hanoi'.\n"
+                        << "To filter destination to Danang, type 'destination Danang'.\n" << endl 
+
+                        << "Type 'cancel' to cancel the booking process.\n"
+                        << "To view this instruction again, type '?' or 'help'."<< endl
+                        << "-------------------------";
+                    continue;
+
+            case 'book':
+                if (book <= carpools.size()) {
+                    // Book the chosen carpool (implementation details to be added)
+                    std::cout << "You've booked: " << carpools[choice-1] << std::endl;
+                    break;
+                }
+                    cout << "Booking failed." << endl
+                    continue;
+
+            case 'cancel':
+                cout << "Booking canceled." << endl
+                break;
+        }
+        //end of switch-case while-loop
 }
 
 void Member::manageBookings() {
