@@ -18,6 +18,7 @@ private:
     std::string idType;
     std::string idNumber;
     int creditPoints;
+    int rating;
 
     bool isValidPassword(const std::string& password);
     bool isValidFullName(const std::string& name);

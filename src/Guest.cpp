@@ -92,6 +92,7 @@ void Guest::signup() {
     } while (confirmPassword.empty() || confirmPassword != password);
 
     creditPoints = 10;
+    rating = -1;
     cout << "Registration successful! You have been credited with 10 points.\n";
 
     // Save data to CSV file
@@ -104,7 +105,8 @@ void Guest::signup() {
              << email << ","
              << idType << ","
              << idNumber << ","
-             << creditPoints << "\n";
+             << creditPoints << ","
+             << rating << "\n";
         file.close();
         cout << "Your information has been saved.\n";
     } else {
