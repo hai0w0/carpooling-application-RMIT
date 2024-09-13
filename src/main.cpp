@@ -113,21 +113,22 @@ int main() {
 
                     switch (memberChoice) {
                         case 1:
-                            cout << "\n================= Profile Information =================\n";
+                            cout << "You have chosen to view profile information\n";
                             member.viewProfile();
                             cout << "Finish view profile";
                             break;
                         case 2:
-                            cout << "\nYou haven chosen to book carpool\n";
-                            member.bookCarpool();
+                            cout << "\nManage Bookings for Passenger functionality not implemented yet.\n";
                             break;
                         case 3:
                             // Implement Book Carpool functionality
-                            cout << "Book Carpool functionality not implemented yet.\n";
+                            cout << "Book Carpool functionality is chosen.\n";
+                            member.bookCarpool();
                             break;
                         case 4:
                             // Implement List Carpool functionality
-                            cout << "List Carpool functionality not implemented yet.\n";
+                            cout << "List Carpool functionality is chosen.\n";
+                            member.listCarpool();
                             break;
                         case 5:
                             // Implement Manage Passenger Requests functionality

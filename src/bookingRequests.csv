@@ -1,0 +1,14 @@
+departureLocation,destinationLocation,departureTime,date,vehicleModel,vehicleColor,plateNumber,availableSeats,contributionPerPassenger,rating,minimumPassengerRating,driverName,currentBookedSeats,passengerName,status
+Ho Chi Minh City,Danang,10:00 AM,2024-09-29,Nissan Leaf,Green,HCM6789NL,5,7,3,2,Nguyen Hoang Nam,3,Tran Dinh Hai,pending
+Hanoi,Danang,08:00 AM,2024-09-15,Toyota Camry,Red,DN1234CA,4,10,4,3,Tran Dinh Hai,1,Nguyen Van An,pending
+Hanoi,Ho Chi Minh City,09:00 AM,2024-09-16,Honda Civic,Blue,HN5678HC,3,15,3,2,Tran Dinh Hai,2,Le Thi Bao,pending
+Danang,Hanoi,10:00 AM,2024-09-17,Ford Focus,Green,DN7890FD,2,12,5,4,Tran Dinh Nam,1,Pham Quoc Tuan,pending
+Hue,Hanoi,11:00 AM,2024-09-18,Hyundai Sonata,Black,HUE1234HY,3,8,3,1,Nguyen Van Bao,1,Doan Thi Nhu,pending
+Hanoi,Hue,12:00 PM,2024-09-19,Toyota Prius,Silver,HN5678TP,5,9,4,3,Pham Quoc Tuan,3,Vu Minh Duc,pending
+Ho Chi Minh City,Danang,01:00 PM,2024-09-20,BMW X5,White,HCM3456BX,4,20,5,4,Le Thi Hoa,2,Tran Thi Lua,pending
+Danang,Ho Chi Minh City,02:00 PM,2024-09-21,Audi Q7,Blue,DN7890AQ,2,25,4,5,Vo Van Minh,1,Nguyen Minh Chau,pending
+Hanoi,Danang,03:00 PM,2024-09-22,Chevrolet Impala,Black,HN9012CI,3,15,4,2,Nguyen Minh Chau,2,Le Quang Anh,pending
+Danang,Hue,04:00 PM,2024-09-23,Ford Fiesta,Red,DN3456FF,4,14,3,3,Tran Thi Lua,2,Doan Khanh Linh,pending
+Hanoi,Ho Chi Minh City,05:00 PM,2024-09-24,Lexus RX,Gray,HN7890LX,3,18,4,3,Le Quang Anh,1,Duong Van Quan,pending
+Ho Chi Minh City,Hanoi,06:00 PM,2024-09-25,Volvo XC90,Blue,HCM4567VX,5,22,5,4,Doan Khanh Linh,3,Phan Thi Ngoc,pending
+Ho Chi Minh City,Danang,01:00 PM,2024-09-20,BMW X5,White,HCM3456BX,4,20,5,4,Le Thi Hoa,1,Tran Dinh Hai,Pending

@@ -9,15 +9,17 @@ private:
     bool isMemberAuthenticated;
     std::string username;
     std::string password;
+    std::string fullname;
     std::map<std::string, std::pair<std::string, std::string>> memberCredentials;
 
     bool validateCredentials(const std::string& username, const std::string& password) const;
-    void searchActiveCarpool();
+    
     void manageBookings();
 
 public:
     Member();
     void loadMemberData();
+    void searchActiveCarpool();
     bool login(const std::string& username, const std::string& password);
     void viewProfile() const;
     void bookCarpool();

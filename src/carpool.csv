@@ -1,21 +1,16 @@
-departureLocation,destinationLocation,departureTime,date,vehicleModel,vehicleColor,plateNumber,availableSeats,contributionPerPassenger,rating
-Hanoi,Danang,08:00 AM,2024-09-15,Toyota Camry,Red,DN1234CA,4,10,3
-Hanoi,Ho Chi Minh City,09:00 AM,2024-09-16,Honda Civic,Blue,HN5678HC,3,15,1
-Danang,Hanoi,10:00 AM,2024-09-17,Ford Focus,Green,DN7890FD,2,12,2
-Ho Chi Minh City,Hanoi,11:00 AM,2024-09-18,Tesla Model 3,Black,HCM2345TM,5,20,3
-Hanoi,Hue,12:00 PM,2024-09-19,BMW 3,White,HUE3456BM,4,16,4
-Hue,Danang,01:00 PM,2024-09-20,Toyota Corolla,Gray,HUE4567TC,3,8,5
-Danang,Ho Chi Minh City,02:00 PM,2024-09-21,Chevrolet Cruze,Black,DN5678CC,3,14,2
-Ho Chi Minh City,Danang,03:00 PM,2024-09-22,Kia Sorento,Red,HCM6789KS,5,18,3
-Hanoi,Hue,04:00 PM,2024-09-23,Hyundai Elantra,Blue,HN7890HE,4,13,2
-Hue,Hanoi,05:00 PM,2024-09-24,Mazda CX-5,Green,HUE8901MC,3,9,4
-Danang,Hue,06:00 PM,2024-09-25,Ford Ranger,Black,DN9012FR,5,15,1
-Ho Chi Minh City,Hanoi,07:00 PM,2024-09-26,Toyota Fortuner,Silver,HCM0123TF,4,17,3
-Hanoi,Danang,08:00 PM,2024-09-27,Honda Accord,White,HN1234HA,2,10,3
-Danang,Hanoi,09:00 PM,2024-09-28,Chevrolet Impala,Red,DN5678CI,3,14,1
-Ho Chi Minh City,Hue,06:00 AM,2024-09-29,Tesla Model S,Blue,HCM2345TS,4,25,5
-Hue,Ho Chi Minh City,07:00 AM,2024-09-30,Audi A4,Black,HUE3456AA,3,20,4
-Hanoi,Ho Chi Minh City,10:00 AM,2024-10-01,Lexus ES,Gray,HN4567LE,4,19,2
-Ho Chi Minh City,Danang,11:00 AM,2024-10-02,Mitsubishi Outlander,Green,HCM5678MO,5,22,3
-Danang,Hanoi,12:00 PM,2024-10-03,Subaru Outback,Blue,DN6789SO,3,11,2
-Hanoi,Ho Chi Minh City,01:00 PM,2024-10-04,Volvo XC60,Black,HN7890VX,2,10,1
+departureLocation,destinationLocation,departureTime,date,vehicleModel,vehicleColor,plateNumber,availableSeats,contributionPerPassenger,rating,minimumPassengerRating,driverName,currentBookedSeats
+Hanoi,Danang,08:00 AM,2024-09-15,Toyota Camry,Red,DN1234CA,4,10,4,3,Tran Dinh Hai,0
+Hanoi,Ho Chi Minh City,09:00 AM,2024-09-16,Honda Civic,Blue,HN5678HC,3,15,3,2,Tran Dinh Hai,1
+Danang,Hanoi,10:00 AM,2024-09-17,Ford Focus,Green,DN7890FD,2,12,5,4,Tran Dinh Nam,2
+Hue,Hanoi,11:00 AM,2024-09-18,Hyundai Sonata,Black,HUE1234HY,3,8,3,1,Nguyen Van Bao,0
+Hanoi,Hue,12:00 PM,2024-09-19,Toyota Prius,Silver,HN5678TP,5,9,4,3,Pham Quoc Tuan,3
+Ho Chi Minh City,Danang,01:00 PM,2024-09-20,BMW X5,White,HCM3456BX,4,20,5,4,Le Thi Hoa,1
+Danang,Ho Chi Minh City,02:00 PM,2024-09-21,Audi Q7,Blue,DN7890AQ,2,25,4,5,Vo Van Minh,0
+Hanoi,Danang,03:00 PM,2024-09-22,Chevrolet Impala,Black,HN9012CI,3,15,4,2,Nguyen Minh Chau,2
+Danang,Hue,04:00 PM,2024-09-23,Ford Fiesta,Red,DN3456FF,4,14,3,3,Tran Thi Lua,0
+Hanoi,Ho Chi Minh City,05:00 PM,2024-09-24,Lexus RX,Gray,HN7890LX,3,18,4,3,Le Quang Anh,1
+Ho Chi Minh City,Hanoi,06:00 PM,2024-09-25,Volvo XC90,Blue,HCM4567VX,5,22,5,4,Doan Khanh Linh,2
+Hanoi,Danang,07:00 PM,2024-09-26,Kia Optima,White,HN1234KO,2,11,4,1,Duong Van Quan,1
+Hue,Ho Chi Minh City,08:00 AM,2024-09-27,Tesla Model S,Silver,HUE5678TS,4,30,5,5,Phan Thi Ngoc,0
+Hanoi,Hue,09:00 AM,2024-09-28,Mercedes-Benz C-Class,Black,HN2345MB,3,17,4,3,Bui Tien Dung,1
+Ho Chi Minh City,Danang,10:00 AM,2024-09-29,Nissan Leaf,Green,HCM6789NL,5,7,3,2,Nguyen Hoang Nam,3
