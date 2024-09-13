@@ -115,23 +115,7 @@ void Member::viewProfile() const {
 
 
 void Member::bookCarpool() {
-    int choice;
-    std::cout << "Choose an option:\n";
-    std::cout << "1. Search and book active carpools\n";
-    std::cout << "2. View your active bookings\n";
-    std::cin >> choice;
 
-    if (choice == 1) {
-        searchActiveCarpool();
-    } else if (choice == 2) {
-        manageBookings();
-    } else {
-        std::cout << "Invalid choice. Please try again.\n";
-    }
-}
-
-
-void Member::searchActiveCarpool() {
     /*std::ifstream file("carpool.csv");
     std::string line;
     std::vector<std::string> carpools;
@@ -361,7 +345,10 @@ void Member::manageBookings() {
 
     std::string line;
     std::getline(bookingsFile, line); // Skip the header
-    std::vector<std::string> userBookings;
+    std::vector<std::string> bookingLines; // Store all lines from the file
+    std::vector<std::string> userBookings; // To display to the user
+    bookingLines.push_back(line); // Add header to new list to be rewritten
+
     int bookingIndex = 1;
     while (std::getline(bookingsFile, line)) {
         std::istringstream ss(line);
@@ -371,10 +358,9 @@ void Member::manageBookings() {
             bookingDetails.push_back(detail);
         }
 
-        // Assuming the passenger's name is at index 13 and status at index 14 in the bookingDetails
-        if (bookingDetails.size() > 14 && bookingDetails[13] == fullname) { // Check if the booking belongs to the logged-in user
+        if (bookingDetails[13] == fullname) {
             std::ostringstream bookingInfo;
-            bookingInfo << "Booking " << bookingIndex++ << ": "
+            bookingInfo << "Booking " << bookingIndex << ": "
                         << "Date: " << bookingDetails[3] // date
                         << ", Time: " << bookingDetails[2] // departure time
                         << ", Departure: " << bookingDetails[0] // departure location
@@ -383,18 +369,60 @@ void Member::manageBookings() {
                         << ", Status: " << bookingDetails[14]; // booking status
             userBookings.push_back(bookingInfo.str());
         }
+        // Add all lines for now, removal is handled later
+        bookingLines.push_back(line);
+        bookingIndex++;
     }
     bookingsFile.close();
 
     if (userBookings.empty()) {
         std::cout << "You have no active bookings.\n";
-    } else {
-        std::cout << "Active bookings:\n---------------\n";
-        for (const auto& booking : userBookings) {
-            std::cout << booking << "\n";
+        return;
+    }
+
+    std::cout << "Active bookings:\n---------------\n";
+    for (const auto& booking : userBookings) {
+        std::cout << booking << "\n";
+    }
+
+    // Options for the user
+    int choice;
+    std::cout << "\nOptions:\n";
+    std::cout << "1. Unlist a booking\n";
+    std::cout << "2. Back to menu\n";
+    std::cout << "Enter your choice: ";
+    std::cin >> choice;
+
+    if (choice == 1) {
+        int bookingNumber;
+        std::cout << "Enter the booking number to unlist: ";
+        std::cin >> bookingNumber;
+        if (bookingNumber > 0 && bookingNumber <= userBookings.size()) {
+            std::string selectedLine = bookingLines[bookingNumber]; // Adjust index for zero-based vector
+            std::istringstream iss(selectedLine);
+            std::vector<std::string> details;
+            std::string detail;
+            while (getline(iss, detail, ',')) {
+                details.push_back(detail);
+            }
+            if (details[14] == "pending") {
+                bookingLines.erase(bookingLines.begin() + bookingNumber); // Remove the selected line
+                // Rewrite the file without the removed line
+                std::ofstream outFile("bookingRequests.csv");
+                for (const auto& l : bookingLines) {
+                    outFile << l << "\n";
+                }
+                outFile.close();
+                std::cout << "Booking unlisted successfully.\n";
+            } else {
+                std::cout << "Selected booking cannot be unlisted because it is not pending.\n";
+            }
         }
+    } else if (choice == 2) {
+        return; // Return to main menu
     }
 }
+
 
 
 void Member::listCarpool() {

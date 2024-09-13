@@ -118,7 +118,8 @@ int main() {
                             cout << "Finish view profile";
                             break;
                         case 2:
-                            cout << "\nManage Bookings for Passenger functionality not implemented yet.\n";
+                            cout << "\nManage Bookings for Passenger functionality is chosen.\n";
+                            member.manageBookings();
                             break;
                         case 3:
                             // Implement Book Carpool functionality
