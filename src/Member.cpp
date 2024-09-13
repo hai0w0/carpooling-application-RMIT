@@ -24,7 +24,6 @@ void Member::loadMemberData() {
         std::string username, password;
         getline(iss, username, ',');
         getline(iss, password, ',');
-        getline(iss, fullname, ',');
         memberCredentials[username] = {username, password};
     }
     file.close();
@@ -40,6 +39,23 @@ bool Member::login(const std::string& inputUsername, const std::string& inputPas
         isMemberAuthenticated = true;
         username = inputUsername;
         password = inputPassword;
+
+        // Load fullname after successful validation
+        std::ifstream file("members.csv");
+        std::string line, user, pass, name;
+        getline(file, line);  // Skip header
+        while (getline(file, line)) {
+            std::istringstream iss(line);
+            getline(iss, user, ',');
+            getline(iss, pass, ',');
+            getline(iss, name, ',');
+            if (user == username && pass == password) {
+                fullname = name;  // Set fullname
+                break;
+            }
+        }
+        file.close();
+
         std::cout << "Login successful.\n";
         return true;
     } else {
@@ -47,6 +63,7 @@ bool Member::login(const std::string& inputUsername, const std::string& inputPas
         return false;
     }
 }
+
 
 void Member::viewProfile() const {
     if (!isMemberAuthenticated) {
@@ -372,12 +389,13 @@ void Member::manageBookings() {
     if (userBookings.empty()) {
         std::cout << "You have no active bookings.\n";
     } else {
-        std::cout << "Active bookings\n---------------\n";
+        std::cout << "Active bookings:\n---------------\n";
         for (const auto& booking : userBookings) {
             std::cout << booking << "\n";
         }
     }
 }
+
 
 void Member::listCarpool() {
     // Implementation to list a new carpool as a driver

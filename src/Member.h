@@ -14,7 +14,7 @@ private:
 
     bool validateCredentials(const std::string& username, const std::string& password) const;
     
-    void manageBookings();
+    
 
 public:
     Member();
@@ -28,6 +28,7 @@ public:
     void handleCancellation();
     void rating();
     void purchaseCredits();
+    void manageBookings();
 };
 
 #endif // MEMBER_H
