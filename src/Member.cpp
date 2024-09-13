@@ -267,9 +267,12 @@ void Member::purchaseCredits() {
         return;
     }
 
+    std::cout << "Starting the purchase process...\n";
+
     std::string inputPassword;
     std::cout << "Please enter your password for verification: ";
     std::cin >> inputPassword;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer after input
 
     if (inputPassword != password) {
         std::cout << "Password verification failed. Purchase aborted.\n";
@@ -279,37 +282,43 @@ void Member::purchaseCredits() {
     int purchaseAmount;
     std::cout << "Enter the amount of credits to purchase ($1 = 1 credit): ";
     std::cin >> purchaseAmount;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
+
     if (purchaseAmount <= 0) {
         std::cout << "Invalid amount. Purchase aborted.\n";
         return;
     }
 
-    // Read and update the file
-    std::ifstream file("members.csv");
     std::vector<std::string> lines;
     std::string line;
     bool updated = false;
 
-    if (!file.is_open()) {
-        std::cout << "Failed to open profile data file.\n";
+    std::ifstream inFile("members.csv");
+    if (!inFile.is_open()) {
+        std::cerr << "Failed to open members file for reading.\n";
         return;
     }
 
-    while (getline(file, line)) {
-        std::stringstream ss(line);
+    getline(inFile, line);  // Read and discard the header
+    lines.push_back(line);  // Add the header back to the lines vector
+
+    while (getline(inFile, line)) {
         std::vector<std::string> userDetails;
+        std::stringstream ss(line);
         std::string detail;
-        
+
         while (getline(ss, detail, ',')) {
             userDetails.push_back(detail);
         }
 
-        if (userDetails.size() >= 7 && userDetails[0] == username) {
-            int currentCredits = std::stoi(userDetails[6]);
+        if (userDetails[0] == username) {
+            std::cout << "Updating credits for user: " << username << "\n";
+
+            int currentCredits = std::stoi(userDetails[7]);  // Credits are at index 7
             currentCredits += purchaseAmount;
-            userDetails[6] = std::to_string(currentCredits);
+            userDetails[7] = std::to_string(currentCredits);
             std::stringstream updatedLine;
-            for (size_t i = 0; i < userDetails.size(); ++i) {
+            for (size_t i = 0; i < userDetails.size(); i++) {
                 updatedLine << userDetails[i];
                 if (i < userDetails.size() - 1) updatedLine << ",";
             }
@@ -318,23 +327,22 @@ void Member::purchaseCredits() {
         }
         lines.push_back(line);
     }
-    file.close();
+    inFile.close();
 
-    // Rewrite the file with updated credits
-    std::ofstream outFile("members.csv");
+    std::ofstream outFile("members.csv", std::ios::trunc);
     if (!outFile.is_open()) {
-        std::cout << "Failed to open profile data file for writing.\n";
+        std::cerr << "Failed to open members file for writing.\n";
         return;
     }
 
-    for (const auto& line : lines) {
-        outFile << line << "\n";
+    for (const auto& eachLine : lines) {
+        outFile << eachLine << "\n";
     }
     outFile.close();
 
     if (updated) {
-        std::cout << "Purchase successful! You have added " << purchaseAmount << " credits to your account.\n";
+        std::cout << "Purchase successful! " << purchaseAmount << " credits added to your account.\n";
     } else {
-        std::cout << "Failed to update credits.\n";
+        std::cout << "User not found or update failed.\n";
     }
 }
