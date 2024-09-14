@@ -491,13 +491,416 @@ void Member::listCarpool() {
     std::cout << "Carpool listing created successfully!\n";
 }
 
-void Member::manageRequests() {
-    // Implementation to view and manage passenger requests for your carpools
+void Member::unlistCarpool() {
+    if (!isMemberAuthenticated) {
+        std::cout << "Access denied. Please log in first.\n";
+        return;
+    }
+
+    std::vector<std::string> carpools;
+    std::vector<int> driverCarpoolIndices;
+    
+    // Read carpool.csv
+    std::ifstream carpoolFile("carpool.csv");
+    std::string line;
+    std::getline(carpoolFile, line); // Skip header
+    carpools.push_back(line); // Add header to carpools vector
+    
+    int index = 1;
+    while (std::getline(carpoolFile, line)) {
+        std::istringstream iss(line);
+        std::vector<std::string> details;
+        std::string detail;
+        while (std::getline(iss, detail, ',')) {
+            details.push_back(detail);
+        }
+        
+        carpools.push_back(line);
+        
+        if (details[11] == fullname) { // Assuming driver's name is at index 11
+            std::cout << index << ". " 
+                      << "From: " << details[0] << ", To: " << details[1]
+                      << ", Date: " << details[3] << ", Time: " << details[2] << "\n";
+            driverCarpoolIndices.push_back(carpools.size() - 1);
+            index++;
+        }
+    }
+    carpoolFile.close();
+    
+    if (driverCarpoolIndices.empty()) {
+        std::cout << "You have no active carpool listings.\n";
+        return;
+    }
+    
+    int choice;
+    std::cout << "Enter the number of the carpool you want to unlist (0 to cancel): ";
+    std::cin >> choice;
+    
+    if (choice < 1 || choice > driverCarpoolIndices.size()) {
+        std::cout << "Invalid choice. Unlisting cancelled.\n";
+        return;
+    }
+    
+    int selectedIndex = driverCarpoolIndices[choice - 1];
+    std::string selectedCarpool = carpools[selectedIndex];
+    
+    // Check for accepted requests in bookingRequests.csv
+    std::ifstream bookingFile("bookingRequests.csv");
+    bool hasAcceptedRequests = false;
+    while (std::getline(bookingFile, line)) {
+        if (line.find(selectedCarpool.substr(0, selectedCarpool.find_last_of(','))) != std::string::npos &&
+            line.find("Accepted") != std::string::npos) {
+            hasAcceptedRequests = true;
+            break;
+        }
+    }
+    bookingFile.close();
+    
+    if (hasAcceptedRequests) {
+        std::cout << "Cannot unlist this carpool as it has accepted requests.\n";
+        return;
+    }
+    
+    // Remove the selected carpool
+    carpools.erase(carpools.begin() + selectedIndex);
+    
+    // Write back to carpool.csv
+    std::ofstream outFile("carpool.csv");
+    for (const auto& carpool : carpools) {
+        outFile << carpool << "\n";
+    }
+    outFile.close();
+    
+    std::cout << "Carpool successfully unlisted.\n";
 }
 
-void Member::handleCancellation() { //(Dat)
-    // Implementation for handling cancellations of bookings or listings
+void Member::manageRequests() {
+    if (!isMemberAuthenticated) {
+        std::cout << "Access denied. Please log in first.\n";
+        return;
+    }
+
+    while (true) {  // Continuously allow the user to manage bookings until they decide to exit
+        std::ifstream bookingsFile("bookingRequests.csv");
+        if (!bookingsFile.is_open()) {
+            std::cout << "Failed to open booking requests file.\n";
+            return;
+        }
+
+        std::string line;
+        std::getline(bookingsFile, line); // Skip the header
+        std::vector<std::string> userBookings; // To display to the user
+
+        int bookingIndex = 1;
+        while (std::getline(bookingsFile, line)) {
+            std::istringstream ss(line);
+            std::vector<std::string> bookingDetails;
+            std::string detail;
+            while (getline(ss, detail, ',')) {
+                bookingDetails.push_back(detail);
+            }
+
+            // Only add bookings that are not rejected and belong to the driver to the view
+            if (bookingDetails[11] == fullname && bookingDetails[14] != "Rejected" || bookingDetails[11] == fullname && bookingDetails[14] != "Completed") {
+                std::ostringstream bookingInfo;
+                bookingInfo << "Booking " << bookingIndex++ << ": "
+                            << "Passenger: " << bookingDetails[13] // passenger name
+                            << ", Date: " << bookingDetails[3] // date
+                            << ", Time: " << bookingDetails[2] // departure time
+                            << ", Departure: " << bookingDetails[0] // departure location
+                            << ", Destination: " << bookingDetails[1] // destination location
+                            << ", Status: " << bookingDetails[14]; // booking status
+                userBookings.push_back(bookingInfo.str());
+            }
+        }
+        bookingsFile.close();
+
+        if (userBookings.empty()) {
+            std::cout << "You have no active booking requests.\n";
+            return; // If no bookings are active, return to the menu
+        }
+
+        std::cout << "Active booking requests:\n------------------------\n";
+        for (const auto& booking : userBookings) {
+            std::cout << booking << "\n";
+        }
+
+        // Options for the driver
+        int choice;
+        std::cout << "\nOptions:\n";
+        std::cout << "1. Accept a booking\n";
+        std::cout << "2. Reject a booking\n";
+        std::cout << "3. Back to menu\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        if (choice == 1 || choice == 2) {
+            int bookingNumber;
+            std::cout << "Enter the booking number to modify: ";
+            std::cin >> bookingNumber;
+            if (bookingNumber > 0 && bookingNumber <= userBookings.size()) {
+                std::istringstream iss(userBookings[bookingNumber - 1]);
+                std::vector<std::string> details;
+                std::string detail;
+                while (getline(iss, detail, ',')) {
+                    details.push_back(detail);
+                }
+                // Process acceptance or rejection based on the choice
+                if (choice == 1 && details[14] == "pending") {
+                    // Accept the booking
+                    details[14] = "Accepted";
+                } else if (choice == 2) {
+                    // Reject the booking
+                    details[14] = "Rejected";
+                }
+                
+                // Notify user of the outcome
+                std::cout << "Booking has been " << (choice == 1 ? "accepted" : "rejected") << ".\n";
+            }
+        } else if (choice == 3) {
+            return; // Exit the loop and return to the main menu
+        }
+    }
 }
+
+
+void Member::confirmCarpoolRides() {
+    if (!isMemberAuthenticated) {
+        std::cout << "Access denied. Please log in first.\n";
+        return;
+    }
+
+    std::ifstream bookingsFile("bookingRequests.csv");
+    if (!bookingsFile.is_open()) {
+        std::cout << "Failed to open booking requests file.\n";
+        return;
+    }
+
+    std::string line;
+    std::getline(bookingsFile, line); // Skip the header
+
+    std::map<std::string, std::vector<std::string>> carpoolGroups;
+    std::vector<std::string> allBookings;
+
+    allBookings.push_back(line); // Add header to allBookings
+
+    while (std::getline(bookingsFile, line)) {
+        std::istringstream ss(line);
+        std::vector<std::string> bookingDetails;
+        std::string detail;
+        while (getline(ss, detail, ',')) {
+            bookingDetails.push_back(detail);
+        }
+
+        if (bookingDetails[11] == fullname && bookingDetails[14] == "Accepted") {
+            std::string tripKey = bookingDetails[0] + "|" + bookingDetails[1] + "|" + bookingDetails[2] + "|" + bookingDetails[3];
+            carpoolGroups[tripKey].push_back(line);
+        }
+        allBookings.push_back(line);
+    }
+    bookingsFile.close();
+
+    if (carpoolGroups.empty()) {
+        std::cout << "No accepted carpool rides to confirm.\n";
+        return;
+    }
+
+    // Display available carpools
+    std::cout << "Accepted carpool rides:\n-----------------------\n";
+    int index = 1;
+    for (const auto& group : carpoolGroups) {
+        std::istringstream keyDetails(group.first);
+        std::vector<std::string> tripInfo;
+        std::string info;
+        while (getline(keyDetails, info, '|')) {
+            tripInfo.push_back(info);
+        }
+        std::cout << index++ << ". Trip from " << tripInfo[0] << " to " << tripInfo[1]
+                  << " at " << tripInfo[2] << " on " << tripInfo[3] << "\n";
+        std::cout << "   Passengers: " << group.second.size() << "\n";
+    }
+
+    // Allow driver to select a ride to confirm completion
+    std::cout << "Select a ride to confirm (0 to cancel): ";
+    int choice;
+    std::cin >> choice;
+    if (choice == 0 || choice > carpoolGroups.size()) return;
+
+    auto it = carpoolGroups.begin();
+    std::advance(it, choice - 1);
+
+    std::cout << "Is the trip completed? (yes/no): ";
+    std::string confirmation;
+    std::cin >> confirmation;
+
+    if (confirmation == "yes") {
+        int totalContribution = 0;
+        for (const auto& bookingLine : it->second) {
+            std::istringstream ss(bookingLine);
+            std::vector<std::string> bookingDetails;
+            std::string detail;
+            while (getline(ss, detail, ',')) {
+                bookingDetails.push_back(detail);
+            }
+            std::string passengerName = bookingDetails[13];
+            int contribution = std::stoi(bookingDetails[8]);
+            totalContribution += contribution;
+            transferCredits(passengerName, fullname, contribution);
+        }
+        
+        std::cout << "Carpool ride confirmed as completed. " << totalContribution << " credits have been transferred.\n";
+        
+        // Update the status in allBookings to "Completed"
+        for (auto& booking : allBookings) {
+            std::istringstream ss(booking);
+            std::vector<std::string> bookingDetails;
+            std::string detail;
+            while (getline(ss, detail, ',')) {
+                bookingDetails.push_back(detail);
+            }
+            if (bookingDetails[11] == fullname && 
+                bookingDetails[0] == it->second[0].substr(0, it->second[0].find(',')) &&
+                bookingDetails[14] == "Accepted") {
+                bookingDetails[14] = "Completed";
+                std::ostringstream updatedBooking;
+                for (size_t i = 0; i < bookingDetails.size(); ++i) {
+                    updatedBooking << bookingDetails[i];
+                    if (i < bookingDetails.size() - 1) updatedBooking << ",";
+                }
+                booking = updatedBooking.str();
+            }
+        }
+        
+        // Rewrite the bookingRequests.csv file with updated statuses
+        std::ofstream outFile("bookingRequests.csv");
+        if (outFile.is_open()) {
+            for (const auto& booking : allBookings) {
+                outFile << booking << "\n";
+            }
+            outFile.close();
+            std::cout << "Booking statuses updated successfully.\n";
+        } else {
+            std::cout << "Failed to update booking statuses in the file.\n";
+        }
+
+        // Update carpool.csv to set available seats to 0
+        std::vector<std::string> carpoolLines;
+        std::ifstream carpoolFile("carpool.csv");
+        if (carpoolFile.is_open()) {
+            std::string carpoolLine;
+            while (std::getline(carpoolFile, carpoolLine)) {
+                std::istringstream ss(carpoolLine);
+                std::vector<std::string> carpoolDetails;
+                std::string detail;
+                while (getline(ss, detail, ',')) {
+                    carpoolDetails.push_back(detail);
+                }
+                if (carpoolDetails.size() > 11 && 
+                    carpoolDetails[0] == it->second[0].substr(0, it->second[0].find(',')) &&
+                    carpoolDetails[11] == fullname) { 
+                    carpoolDetails[12] = "0";  // Set current booked seats to 0
+                    std::ostringstream updatedCarpool;
+                    for (size_t i = 0; i < carpoolDetails.size(); ++i) {
+                        updatedCarpool << carpoolDetails[i];
+                        if (i < carpoolDetails.size() - 1) updatedCarpool << ",";
+                    }
+                    carpoolLines.push_back(updatedCarpool.str());
+                } else {
+                    carpoolLines.push_back(carpoolLine);
+                }
+            }
+            carpoolFile.close();
+
+            std::ofstream carpoolOutFile("carpool.csv");
+            if (carpoolOutFile.is_open()) {
+                for (const auto& carpoolLine : carpoolLines) {
+                    carpoolOutFile << carpoolLine << "\n";
+                }
+                carpoolOutFile.close();
+                std::cout << "Carpool details updated successfully.\n";
+            } else {
+                std::cout << "Failed to update carpool details in the file.\n";
+            }
+        } else {
+            std::cout << "Failed to open carpool.csv for reading.\n";
+        }
+    } else {
+        std::cout << "Carpool ride not confirmed as completed.\n";
+    }
+}
+
+void Member::transferCredits(const std::string& fromUser, const std::string& toUser, int amount) {
+    std::vector<std::string> lines;
+    std::string line;
+    
+    // Read the entire members.csv file
+    std::ifstream inFile("members.csv");
+    if (!inFile.is_open()) {
+        std::cout << "Failed to open members.csv for reading.\n";
+        return;
+    }
+    
+    while (std::getline(inFile, line)) {
+        lines.push_back(line);
+    }
+    inFile.close();
+    
+    bool fromUserFound = false, toUserFound = false;
+    
+    // Update credit amounts
+    for (auto& line : lines) {
+        std::istringstream iss(line);
+        std::vector<std::string> userDetails;
+        std::string detail;
+        while (std::getline(iss, detail, ',')) {
+            userDetails.push_back(detail);
+        }
+        
+        if (userDetails.size() > 7) {
+            if (userDetails[2] == fromUser) {
+                int currentCredits = std::stoi(userDetails[7]);
+                userDetails[7] = std::to_string(currentCredits - amount);
+                fromUserFound = true;
+            } else if (userDetails[2] == toUser) {
+                int currentCredits = std::stoi(userDetails[7]);
+                userDetails[7] = std::to_string(currentCredits + amount);
+                toUserFound = true;
+            }
+            
+            if (fromUserFound || toUserFound) {
+                std::ostringstream oss;
+                for (size_t i = 0; i < userDetails.size(); ++i) {
+                    if (i > 0) oss << ",";
+                    oss << userDetails[i];
+                }
+                line = oss.str();
+            }
+        }
+        
+        if (fromUserFound && toUserFound) break;
+    }
+    
+    if (!fromUserFound || !toUserFound) {
+        std::cout << "Error: One or both users not found.\n";
+        return;
+    }
+    
+    // Write the updated data back to members.csv
+    std::ofstream outFile("members.csv");
+    if (!outFile.is_open()) {
+        std::cout << "Failed to open members.csv for writing.\n";
+        return;
+    }
+    
+    for (const auto& updatedLine : lines) {
+        outFile << updatedLine << "\n";
+    }
+    outFile.close();
+    
+    std::cout << "Credits transferred successfully.\n";
+}
+
+
 
 void Member::rating() { //(Quang)
     // Implementation to rate a passenger or driver

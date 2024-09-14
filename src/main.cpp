@@ -103,10 +103,11 @@ int main() {
                     cout << "3. Book Carpool (Become a passenger)" << endl;
                     cout << "4. List Carpool (Become a driver)" << endl;
                     cout << "5. Manage your Passenger' requests" << endl;
-                    cout << "6. Cancellation" << endl;
+                    cout << "6. Confirm Carpool Ride" << endl;
                     cout << "7. Rating" << endl;
                     cout << "8. Purchase Credit" << endl;
-                    cout << "9. Exit" << endl;
+                    cout << "9. Unlist Carpool" << endl;
+                    cout << "10. Exit" << endl;
                     cout << "Enter your choice: ";
                     int memberChoice;
                     cin >> memberChoice;
@@ -133,11 +134,13 @@ int main() {
                             break;
                         case 5:
                             // Implement Manage Passenger Requests functionality
-                            cout << "Manage Passenger Requests functionality not implemented yet.\n";
+                            cout << "Manage Passenger Requests is chosen.\n";
+                            member.manageRequests();
                             break;
                         case 6:
                             // Implement Cancellation functionality
-                            cout << "Cancellation functionality not implemented yet.\n";
+                            cout << "Confirm carpool Ride is chosen.\n";
+                            member.confirmCarpoolRides();
                             break;
                         case 7:
                             // Implement Rating functionality
@@ -148,6 +151,10 @@ int main() {
                             member.purchaseCredits();
                             break;
                         case 9:
+                            cout << "You have chosen the Unlist Carppol option." << endl;
+                            member.unlistCarpool();
+                            break;
+                        case 10:
                             cout << "Exiting Member mode...\n";
                             MembercontinueSession = false; // Exit the member session
                             break;

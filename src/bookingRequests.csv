@@ -1,6 +1,9 @@
 departureLocation,destinationLocation,departureTime,date,vehicleModel,vehicleColor,plateNumber,availableSeats,contributionPerPassenger,rating,minimumPassengerRating,driverName,currentBookedSeats,passengerName,status
-Hanoi,Danang,08:00 AM,2024-09-15,Toyota Camry,Red,DN1234CA,4,10,4,3,Tran Dinh Hai,1,Nguyen Van An,pending
-Hanoi,Ho Chi Minh City,09:00 AM,2024-09-16,Honda Civic,Blue,HN5678HC,3,15,3,2,Tran Dinh Hai,2,Le Thi Bao,pending
+Hanoi,Danang,08:00 AM,2024-09-15,Toyota Camry,Red,DN1234CA,4,10,4,3,Tran Dinh Hai,1,Nguyen Van A,Completed
+Hanoi,Danang,08:00 AM,2024-09-15,Toyota Camry,Red,DN1234CA,4,10,4,3,Tran Dinh Hai,1,Nguyen Van B,Completed
+Hanoi,Danang,08:00 AM,2024-09-15,Toyota Camry,Red,DN1234CA,4,10,4,3,Tran Dinh Hai,1,Nguyen Van C,Completed
+Hanoi,Danang,08:00 AM,2024-09-15,Toyota Camry,Red,DN1234CA,4,10,4,3,Tran Dinh Hai,1,Nguyen Van D,Completed
+Hanoi,Ho Chi Minh City,09:00 AM,2024-09-16,Honda Civic,Blue,HN5678HC,3,15,3,2,Tran Dinh Hai,2,Le Thi Bao,Rejected
 Danang,Hanoi,10:00 AM,2024-09-17,Ford Focus,Green,DN7890FD,2,12,5,4,Tran Dinh Nam,1,Pham Quoc Tuan,pending
 Hue,Hanoi,11:00 AM,2024-09-18,Hyundai Sonata,Black,HUE1234HY,3,8,3,1,Nguyen Van Bao,1,Doan Thi Nhu,pending
 Hanoi,Hue,12:00 PM,2024-09-19,Toyota Prius,Silver,HN5678TP,5,9,4,3,Pham Quoc Tuan,3,Vu Minh Duc,pending

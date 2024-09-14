@@ -24,11 +24,14 @@ public:
     void viewProfile() const;
     void bookCarpool();
     void listCarpool();
+    void unlistCarpool();
     void manageRequests();
-    void handleCancellation();
+    void confirmCarpoolRides();
     void rating();
     void purchaseCredits();
     void manageBookings();
+    void transferCredits(const std::string& fromUser, const std::string& toUser, int amount);
+
 };
 
 #endif // MEMBER_H
