@@ -148,7 +148,8 @@ int main() {
                             break;
                         case 7:
                             // Implement Rating functionality
-                            cout << "Rating functionality not implemented yet.\n";
+                            cout << "You have chosen the Rating option.\n";
+                            member.rating();
                             break;
                         case 8:
                             cout << "You have chosen the Purchase Credit option. Each credit is worth $1." << endl;

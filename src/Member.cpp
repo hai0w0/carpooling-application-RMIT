@@ -921,8 +921,112 @@ void Member::transferCredits(const std::string& fromUser, const std::string& toU
 
 
 
-void Member::rating() { //(Quang)
-    // Implementation to rate a passenger or driver
+void Member::rating() {
+    if (!isMemberAuthenticated) {
+        std::cout << "Access denied. Please log in first.\n";
+        return;
+    }
+
+    // Load completed rides
+    std::vector<std::vector<std::string>> completedRides;
+    std::ifstream bookingsFile("bookingRequests.csv");
+    std::string line;
+    std::getline(bookingsFile, line); // Skip header
+    while (std::getline(bookingsFile, line)) {
+        std::istringstream ss(line);
+        std::vector<std::string> bookingDetails;
+        std::string detail;
+        while (std::getline(ss, detail, ',')) {
+            bookingDetails.push_back(detail);
+        }
+        if (bookingDetails[14] == "Completed" && 
+            (bookingDetails[11] == fullname || bookingDetails[13] == fullname)) {
+            completedRides.push_back(bookingDetails);
+        }
+    }
+    bookingsFile.close();
+
+    if (completedRides.empty()) {
+        std::cout << "No completed rides to rate.\n";
+        return;
+    }
+
+    // Display completed rides
+    std::cout << "Completed rides:\n";
+    for (size_t i = 0; i < completedRides.size(); ++i) {
+        std::cout << i + 1 << ". " << completedRides[i][0] << " to " << completedRides[i][1]
+                  << " on " << completedRides[i][3] << " at " << completedRides[i][2] << "\n";
+    }
+
+    // Select a ride to rate
+    int choice;
+    std::cout << "Select a ride to rate (0 to cancel): ";
+    std::cin >> choice;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    if (choice < 1 || choice > static_cast<int>(completedRides.size())) {
+        std::cout << "Invalid choice. Rating cancelled.\n";
+        return;
+    }
+
+    const auto& selectedRide = completedRides[choice - 1];
+    std::string ratedUser = (selectedRide[11] == fullname) ? selectedRide[13] : selectedRide[11];
+    std::string raterRole = (selectedRide[11] == fullname) ? "Driver" : "Passenger";
+
+    // Get rating and review
+    int ratingScore;
+    std::string review;
+    std::cout << "Rate " << ratedUser << " (1-5): ";
+    std::cin >> ratingScore;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    if (ratingScore < 1 || ratingScore > 5) {
+        std::cout << "Invalid rating. Must be between 1 and 5.\n";
+        return;
+    }
+    std::cout << "Leave a review (optional): ";
+    std::getline(std::cin, review);
+
+    // Update user's rating in members.csv
+    std::vector<std::string> memberLines;
+    std::ifstream membersFile("members.csv");
+    std::getline(membersFile, line); // Read and store header
+    memberLines.push_back(line);
+    while (std::getline(membersFile, line)) {
+        std::istringstream ss(line);
+        std::vector<std::string> memberDetails;
+        std::string detail;
+        while (std::getline(ss, detail, ',')) {
+            memberDetails.push_back(detail);
+        }
+        if (memberDetails[2] == ratedUser) {
+            int currentRating = std::stoi(memberDetails[8]);
+            int newRating = (currentRating + ratingScore) / 2; // Simple average
+            memberDetails[8] = std::to_string(newRating);
+            std::ostringstream updatedMember;
+            for (size_t i = 0; i < memberDetails.size(); ++i) {
+                updatedMember << memberDetails[i];
+                if (i < memberDetails.size() - 1) updatedMember << ",";
+            }
+            memberLines.push_back(updatedMember.str());
+        } else {
+            memberLines.push_back(line);
+        }
+    }
+    membersFile.close();
+
+    // Write updated members data
+    std::ofstream outMembersFile("members.csv");
+    for (const auto& memberLine : memberLines) {
+        outMembersFile << memberLine << "\n";
+    }
+    outMembersFile.close();
+
+    // Store rating and review in a new file: ratings.csv
+    std::ofstream ratingsFile("ratings.csv", std::ios::app);
+    ratingsFile << raterRole << "," << fullname << "," << ratedUser << "," 
+                << ratingScore << "," << review << "\n";
+    ratingsFile.close();
+
+    std::cout << "Rating submitted successfully.\n";
 }
 
 void Member::purchaseCredits() {
