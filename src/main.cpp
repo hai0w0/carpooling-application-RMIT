@@ -22,6 +22,9 @@ void showWelcomeScreen() {
     cout << "Enter your choice: ";
 }
 
+
+
+
 int main() {
     int choice;
 
@@ -107,7 +110,8 @@ int main() {
                     cout << "7. Rating" << endl;
                     cout << "8. Purchase Credit" << endl;
                     cout << "9. Unlist Carpool" << endl;
-                    cout << "10. Exit" << endl;
+                    cout << "10. Edit Profile" << endl;
+                    cout << "11. Exit" << endl;
                     cout << "Enter your choice: ";
                     int memberChoice;
                     cin >> memberChoice;
@@ -155,6 +159,10 @@ int main() {
                             member.unlistCarpool();
                             break;
                         case 10:
+                            cout << "You have chosen the Edit Profile option." << endl;
+                            member.editProfile();
+                            break;
+                        case 11:
                             cout << "Exiting Member mode...\n";
                             MembercontinueSession = false; // Exit the member session
                             break;
@@ -222,11 +230,21 @@ int main() {
         }
 
         // Ask if user wants to continue or exit
-        cout << "\nDo you want to continue (Yes/No)? ";
-        string answer;
-        cin >> answer;
-        if (answer == "No" || answer == "no") {
-            break;  // Exit the loop and the program
+        while (true) {  
+            cout << "\nDo you want to continue (Yes/No)? ";
+            string answer;
+            cin >> answer; 
+            if (answer == "No" || answer == "no") {
+                cout << "Exiting the program...\n";
+                cout << endl;
+                return 0;  
+            } else if (answer == "Yes" || answer == "yes") {
+                cout << "Got it. Continuing the program...\n";
+                cout << endl;
+                break; 
+            } else {
+                cout << "Wrong input, please enter \"Yes/yes\" or \"No/no\".\n";
+            }
         }
     }
 

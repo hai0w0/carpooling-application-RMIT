@@ -22,6 +22,7 @@ public:
     void searchActiveCarpool();
     bool login(const std::string& username, const std::string& password);
     void viewProfile() const;
+    void editProfile();
     void bookCarpool();
     void listCarpool();
     void unlistCarpool();

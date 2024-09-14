@@ -112,151 +112,116 @@ void Member::viewProfile() const {
     }
 }
 
-
-
-void Member::bookCarpool() {
-
-    /*std::ifstream file("carpool.csv");
-    std::string line;
-    std::vector<std::string> carpools;
-
-    // Read and display active carpools
-    while (std::getline(file, line)) {
-        carpools.push_back(line);
-        std::cout << carpools.size() << ". " << line << std::endl;
-    }
-    //Pull request start
-    //Clear the line and carpool vector for use in the switch-case while-loop below
-    line.clear();
-    carpools.clear();
-
-    //Print instruction
-    std::cout << "-------------------------\n"
-              << "To book a carpool; type 'book', following by the corresponding number.\n"
-              << "To filter available carpool by departure location and destination location; type:\n"
-              << " 'destination' or 'departure', following by the city name.\n" << std::endl
-              << "For instance, to book carpool number 8, type 'book 8'.\n"
-              << "To filter departure from Hanoi, type 'departure Hanoi'.\n"
-              << "To filter destination to Danang, type 'destination Danang'.\n" << std::endl 
-              << "Type 'cancel' to cancel the booking process.\n"
-              << "To view this instruction again, type '?' or 'help'." << std::endl
-              << "-------------------------" << std::endl;
-    
-    while (true) {
-        // Let user choose an option from: filtering, display instruction or cancel
-        std::string choice, parameter;
-        std::cout << "Enter the input (caution: the input is case-sensitive): ";
-        std::cin >> choice;
-
-        if (choice != "book" && choice != "destination" && choice != "departure" && choice != "help" && choice != "?" && choice != "cancel") {
-            std::cout << "Invalid choice. Please try again.\n";
-            continue;
-        }
-
-        if (choice != "help" && choice != "?" && choice != "cancel") {
-            std::cin >> parameter;
-        }
-
-        if (choice == "destination" || choice == "departure") {
-            if (parameter.empty() || std::any_of(parameter.begin(), parameter.end(), ::isdigit)) {
-                std::cout << "Invalid parameter. Please enter a valid city name.\n";
-                continue;
-            }
-        }
-
-        if (choice == "book") {
-            if (parameter.empty() || !std::all_of(parameter.begin(), parameter.end(), ::isdigit)) {
-                std::cout << "Invalid parameter. Please enter a valid number.\n";
-                continue;
-            }
-        }
-
-        /*
-        Pseudo code of the switch-case while-loop below:
-        1. If the case is filter destination/departure location, do the following:
-        - Read one line of the carpool data file, until the eol is met; while the carpool file still contain data
-        - Save the first and second value of the aforementioned line to two string variable, namely desData and departData
-        - Compare accordingly if the user parameter is == to desData or departData
-        - If true, print out the desData and departData manually, then print out the remaining data from the line using vector. Then continue loop
-        - If false, print out the error. Then continue loop.
-        
-        2. If the case is '?' or 'help':
-        - Print out the instruction again, then continue loop.
-        
-        3. If the case is book:
-        - ...
-        
-        if (choice == "destination" || choice == "departure") {
-            file.clear();
-            file.seekg(0, std::ios::beg);
-            std::getline(file, line); // Skip header
-            bool found = false;
-            
-            while (std::getline(file, line)) {
-                std::istringstream iss(line);
-                std::string departure, destination;
-                
-                std::getline(iss, departure, ',');
-                std::getline(iss, destination, ',');
-
-                if ((choice == "destination" && parameter == destination) || 
-                    (choice == "departure" && parameter == departure)) {
-                    std::cout << departure << ", " << destination << ", ";
-                    std::string remainingData;
-                    std::getline(iss, remainingData);
-                    std::cout << remainingData << std::endl;
-                    found = true;
-                }
-            }
-            
-            if (!found) {
-                std::cout << "There are no available carpools with the " << choice << " " 
-                          << (choice == "destination" ? "to " : "from ") << parameter << ".\n"
-                          << "Please try again.\n";
-            }
-        }
-        else if (choice == "help" || choice == "?") {
-            std::cout << "-------------------------\n"
-                      << "To book a carpool; type 'book', following by the corresponding number.\n"
-                      << "To filter available carpool by departure location and destination location; type:\n"
-                      << " 'destination' or 'departure', following by the city name.\n" << std::endl
-                      << "For instance, to book carpool number 8, type 'book 8'.\n"
-                      << "To filter departure from Hanoi, type 'departure Hanoi'.\n"
-                      << "To filter destination to Danang, type 'destination Danang'.\n" << std::endl 
-                      << "Type 'cancel' to cancel the booking process.\n"
-                      << "To view this instruction again, type '?' or 'help'." << std::endl
-                      << "-------------------------" << std::endl;
-        }
-        else if (choice == "book") {
-            int bookingNumber = std::stoi(parameter);
-            if (bookingNumber > 0 && bookingNumber <= static_cast<int>(carpools.size())) {
-                // Book the chosen carpool (implementation details to be added)
-                std::cout << "You've booked: " << carpools[bookingNumber - 1] << std::endl;
-                break;
-            } else {
-                std::cout << "Booking failed. Invalid carpool number." << std::endl;
-            }
-        }
-        else if (choice == "cancel") {
-            std::cout << "Booking canceled." << std::endl;
-            break;
-        }
-    }
-    file.close();*/
-
+void Member::editProfile() {
     if (!isMemberAuthenticated) {
         std::cout << "Access denied. Please log in first.\n";
         return;
     }
 
-    int memberCredits = 0;  // Member's available credits
-    int memberRating = 0;   // Member's rating score
-    std::string fullName;   // Member's full name
+    std::vector<std::string> lines;
+    std::string line;
+    bool found = false;
 
-    // Load the member's current credit, rating, and full name from members.csv
+    std::ifstream inFile("members.csv");
+    if (!inFile.is_open()) {
+        std::cout << "Failed to open members file.\n";
+        return;
+    }
+
+    while (getline(inFile, line)) {
+        lines.push_back(line);
+    }
+    inFile.close();
+
+    for (auto& line : lines) {
+        std::istringstream iss(line);
+        std::vector<std::string> userDetails;
+        std::string detail;
+        while (getline(iss, detail, ',')) {
+            userDetails.push_back(detail);
+        }
+
+        if (userDetails[0] == username) { // Assuming username is the first element
+            found = true;
+            std::cout << "Select an option to update:\n";
+            std::cout << "1. Password\n";
+            std::cout << "2. Phone Number\n";
+            std::cout << "3. Email\n";
+            std::cout << "0. Cancel\n";
+            std::cout << "Enter your choice: ";
+            int choice;
+            std::cin >> choice;
+            std::cin.ignore(); // Clear the newline character left in the input buffer
+
+            switch (choice) {
+                case 1:
+                    std::cout << "Enter new password: ";
+                    getline(std::cin, userDetails[1]);
+                    std::cout << "Password has been updated successfully.\n";
+                    break;
+                case 2:
+                    std::cout << "Enter new phone number: ";
+                    getline(std::cin, userDetails[3]);
+                    std::cout << "Phone number has been updated successfully.\n";
+                    break;
+                case 3:
+                    std::cout << "Enter new email: ";
+                    getline(std::cin, userDetails[4]);
+                    std::cout << "Email has been updated successfully.\n";
+                    break;
+                case 0:
+                    std::cout << "Update cancelled.\n";
+                    return;
+                default:
+                    std::cout << "Invalid choice. No changes made.\n";
+                    return;
+            }
+
+            // Update the line with new details
+            std::ostringstream oss;
+            for (const auto& item : userDetails) {
+                if (&item != &userDetails[0]) oss << ",";
+                oss << item;
+            }
+            line = oss.str();
+            break;
+        }
+    }
+
+    if (!found) {
+        std::cout << "User not found.\n";
+        return;
+    }
+
+    std::ofstream outFile("members.csv");
+    if (!outFile.is_open()) {
+        std::cout << "Failed to open members file for writing.\n";
+        return;
+    }
+
+    for (const auto& updatedLine : lines) {
+        outFile << updatedLine << "\n";
+    }
+    outFile.close();
+
+    std::cout << "Profile updated successfully.\n";
+}
+
+
+void Member::bookCarpool() {
+    if (!isMemberAuthenticated) {
+        std::cout << "Access denied. Please log in first.\n";
+        return;
+    }
+
+    int memberCredits = 0;
+    int memberRating = 0;
+    std::string fullName;
+
+    // Load member data
     std::ifstream memberFile("members.csv");
     std::string memberLine;
-    std::getline(memberFile, memberLine); // Skip the header line
+    std::getline(memberFile, memberLine); // Skip header
     while (std::getline(memberFile, memberLine)) {
         std::istringstream memberSS(memberLine);
         std::vector<std::string> memberDetails;
@@ -265,19 +230,18 @@ void Member::bookCarpool() {
             memberDetails.push_back(memberDetail);
         }
         if (memberDetails[0] == this->username) {
-            memberCredits = std::stoi(memberDetails[7]); // Index 7 for credits
-            memberRating = std::stoi(memberDetails[8]); // Index 8 for rating
-            fullName = memberDetails[2]; // Index 2 for full name
+            memberCredits = std::stoi(memberDetails[7]);
+            memberRating = std::stoi(memberDetails[8]);
+            fullName = memberDetails[2];
             break;
         }
     }
     memberFile.close();
 
-    // Read carpool.csv and filter eligible carpools
+    // Read and store all eligible carpools
+    std::vector<std::vector<std::string>> eligibleCarpools;
     std::ifstream carpoolFile("carpool.csv");
     std::string carpoolLine;
-    std::vector<std::string> eligibleCarpools;
-    std::vector<std::string> carpoolRawData; // To store raw carpool data for booking
     std::getline(carpoolFile, carpoolLine); // Skip header
     while (std::getline(carpoolFile, carpoolLine)) {
         std::istringstream carpoolSS(carpoolLine);
@@ -293,41 +257,96 @@ void Member::bookCarpool() {
             int minimumRating = std::stoi(carpoolDetails[10]);
 
             if (memberCredits >= requiredCredits && memberRating >= minimumRating && currentBookedSeats < availableSeats) {
-                std::ostringstream displayLine;
-                displayLine << "Route: " << carpoolDetails[0] << " to " << carpoolDetails[1]
-                            << ", Departure: " << carpoolDetails[2] << " on " << carpoolDetails[3]
-                            << ", Vehicle: " << carpoolDetails[4] << " (" << carpoolDetails[5] << ", " << carpoolDetails[6] << ")"
-                            << ", Seats Available: " << (availableSeats - currentBookedSeats)
-                            << ", Price per Seat: $" << carpoolDetails[8]
-                            << ", Driver: " << carpoolDetails[11];
-                eligibleCarpools.push_back(displayLine.str());
-                carpoolRawData.push_back(carpoolLine); // Save raw data for potential booking
+                eligibleCarpools.push_back(carpoolDetails);
             }
         }
     }
     carpoolFile.close();
 
-    // Display eligible carpools and let user choose
-    if (eligibleCarpools.empty()) {
-        std::cout << "No eligible carpools available based on your credits, rating, or seat availability.\n";
-        return;
-    }
+    auto displayCarpools = [](const std::vector<std::vector<std::string>>& carpools) {
+        for (size_t i = 0; i < carpools.size(); i++) {
+            const auto& carpool = carpools[i];
+            std::cout << i + 1 << ". Route: " << carpool[0] << " to " << carpool[1]
+                      << ", Departure: " << carpool[2] << " on " << carpool[3]
+                      << ", Vehicle: " << carpool[4] << " (" << carpool[5] << ", " << carpool[6] << ")"
+                      << ", Seats Available: " << (std::stoi(carpool[7]) - std::stoi(carpool[12]))
+                      << ", Price per Seat: $" << carpool[8]
+                      << ", Driver: " << carpool[11] << "\n";
+        }
+    };
 
-    for (size_t i = 0; i < eligibleCarpools.size(); i++) {
-        std::cout << i + 1 << ". " << eligibleCarpools[i] << "\n";
-    }
+    while (true) {
+        if (eligibleCarpools.empty()) {
+            std::cout << "No eligible carpools available.\n";
+            return;
+        }
 
-    std::cout << "Enter the number of the carpool you want to book (0 to cancel): ";
-    int choice;
-    std::cin >> choice;
-    if (choice > 0 && choice <= eligibleCarpools.size()) {
-        std::string selectedCarpool = carpoolRawData[choice - 1]; // Retrieve the raw carpool data
-        std::ofstream bookingFile("bookingRequests.csv", std::ios::app); // Append to booking file
-        bookingFile << selectedCarpool << "," << fullName << ",Pending\n"; // Append full name and pending status
-        bookingFile.close();
-        std::cout << "Booking request created successfully. Status: Pending.\n";
-    } else if (choice != 0) {
-        std::cout << "Invalid choice. Booking cancelled.\n";
+        std::cout << "\nAvailable carpools:\n";
+        displayCarpools(eligibleCarpools);
+
+        std::cout << "\nOptions:\n";
+        std::cout << "1. Book a carpool\n";
+        std::cout << "2. Filter carpools\n";
+        std::cout << "3. Exit\n";
+        std::cout << "Enter your choice: ";
+
+        int choice;
+        std::cin >> choice;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        if (choice == 1) {
+            std::cout << "Enter the number of the carpool you want to book: ";
+            int bookingChoice;
+            std::cin >> bookingChoice;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            if (bookingChoice > 0 && bookingChoice <= static_cast<int>(eligibleCarpools.size())) {
+                const auto& selectedCarpool = eligibleCarpools[bookingChoice - 1];
+                std::ofstream bookingFile("bookingRequests.csv", std::ios::app);
+                for (size_t i = 0; i < selectedCarpool.size(); ++i) {
+                    bookingFile << selectedCarpool[i];
+                    if (i < selectedCarpool.size() - 1) bookingFile << ",";
+                }
+                bookingFile << "," << fullName << ",Pending\n";
+                bookingFile.close();
+                std::cout << "Booking request created successfully. Status: Pending.\n";
+                return;
+            } else {
+                std::cout << "Invalid choice. Please try again.\n";
+            }
+        } else if (choice == 2) {
+            std::string departure, destination;
+            int maxPrice;
+
+            std::cout << "Enter departure location (leave blank for no filter): ";
+            std::getline(std::cin, departure);
+
+            std::cout << "Enter destination location (leave blank for no filter): ";
+            std::getline(std::cin, destination);
+
+            std::cout << "Enter maximum price per seat (0 for no limit): ";
+            std::cin >> maxPrice;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            auto filteredCarpools = eligibleCarpools;
+            filteredCarpools.erase(
+                std::remove_if(filteredCarpools.begin(), filteredCarpools.end(),
+                    [&](const std::vector<std::string>& carpool) {
+                        return (!departure.empty() && carpool[0] != departure) ||
+                               (!destination.empty() && carpool[1] != destination) ||
+                               (maxPrice > 0 && std::stoi(carpool[8]) > maxPrice);
+                    }),
+                filteredCarpools.end()
+            );
+
+            eligibleCarpools = filteredCarpools;
+            std::cout << "\nFiltered carpools:\n";
+            displayCarpools(eligibleCarpools);
+        } else if (choice == 3) {
+            return;
+        } else {
+            std::cout << "Invalid choice. Please try again.\n";
+        }
     }
 }
 
@@ -917,7 +936,7 @@ void Member::purchaseCredits() {
     std::string inputPassword;
     std::cout << "Please enter your password for verification: ";
     std::cin >> inputPassword;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer after input
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  
 
     if (inputPassword != password) {
         std::cout << "Password verification failed. Purchase aborted.\n";
@@ -927,7 +946,7 @@ void Member::purchaseCredits() {
     int purchaseAmount;
     std::cout << "Enter the amount of credits to purchase ($1 = 1 credit): ";
     std::cin >> purchaseAmount;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  
 
     if (purchaseAmount <= 0) {
         std::cout << "Invalid amount. Purchase aborted.\n";
@@ -944,8 +963,8 @@ void Member::purchaseCredits() {
         return;
     }
 
-    getline(inFile, line);  // Read and discard the header
-    lines.push_back(line);  // Add the header back to the lines vector
+    getline(inFile, line);  
+    lines.push_back(line);  
 
     while (getline(inFile, line)) {
         std::vector<std::string> userDetails;
