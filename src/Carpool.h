@@ -1,4 +1,3 @@
-// Carpool.h
 #ifndef CARPOOL_H
 #define CARPOOL_H
 
@@ -32,4 +31,4 @@ private:
     double rating;
 };
 
-#endif // CARPOOL_H
+#endif

@@ -16,8 +16,7 @@ private:
     std::string username;
     std::string password;
     bool isAuthenticated;
-
     bool validateCredentials(const std::string& username, const std::string& password) const;
 };
 
-#endif // ADMIN_H
+#endif

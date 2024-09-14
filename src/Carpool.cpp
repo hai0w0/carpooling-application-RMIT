@@ -1,25 +1,25 @@
-// Carpool.cpp
 #include "Carpool.h"
 #include <sstream>
+using namespace std;
 
-Carpool::Carpool(const std::string &departureLocation, const std::string &destinationLocation,
-                 const std::string &departureTime, const std::string &date, const std::string &vehicleModel,
-                 const std::string &vehicleColor, const std::string &plateNumber, int availableSeats,
+Carpool::Carpool(const string &departureLocation, const string &destinationLocation,
+                 const string &departureTime, const string &date, const string &vehicleModel,
+                 const string &vehicleColor, const string &plateNumber, int availableSeats,
                  double contributionPerPassenger, double rating)
 : departureLocation(departureLocation), destinationLocation(destinationLocation),
   departureTime(departureTime), date(date), vehicleModel(vehicleModel), vehicleColor(vehicleColor),
   plateNumber(plateNumber), availableSeats(availableSeats), contributionPerPassenger(contributionPerPassenger),
   rating(rating) {}
 
-const std::string& Carpool::getDepartureLocation() const {
+const string& Carpool::getDepartureLocation() const {
     return departureLocation;
 }
 
-const std::string& Carpool::getDestinationLocation() const {
+const string& Carpool::getDestinationLocation() const {
     return destinationLocation;
 }
 
-const std::string& Carpool::getDate() const {
+const string& Carpool::getDate() const {
     return date;
 }
 
@@ -35,8 +35,8 @@ double Carpool::getRating() const {
     return rating;
 }
 
-std::string Carpool::getCarpoolDetails() const {
-    std::ostringstream details;
+string Carpool::getCarpoolDetails() const {
+    ostringstream details;
     details << departureLocation << " to " << destinationLocation
             << " on " << date << " - " << vehicleModel << " (" << vehicleColor << ")";
     return details.str();

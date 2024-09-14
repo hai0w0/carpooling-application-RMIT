@@ -5,10 +5,8 @@
 #include <sstream>
 using namespace std;
 
-// Constructor definition
 Guest::Guest() : creditPoints(0) {}
 
-// Method definitions
 void Guest::signup() {
     cout << "\n============SIGN-UP MENU============\n";
 
@@ -23,7 +21,7 @@ void Guest::signup() {
     do {
         cout << "Enter password (at least 8 characters): ";
         cin >> password;
-        cin.ignore(); // Ignore leftover newline
+        cin.ignore();
         if (password.empty()) {
             cout << "Password cannot be left blank. Please enter again.\n";
         } else if (!isValidPassword(password)) {
@@ -52,7 +50,7 @@ void Guest::signup() {
     do {
         cout << "Enter email (no spaces, must contain '@'): ";
         cin >> email;
-        cin.ignore(); // Ignore leftover newline
+        cin.ignore(); 
         if (email.empty()) {
             cout << "Email cannot be left blank. Please enter again.\n";
         } else if (!isValidEmail(email)) {
@@ -64,7 +62,7 @@ void Guest::signup() {
     do {
         cout << "Enter ID type (1 for Citizen ID, 2 for Passport): ";
         cin >> idTypeOption;
-        cin.ignore(); // Ignore leftover newline
+        cin.ignore(); 
         if (!isValidIdType(idTypeOption)) {
             cout << "Invalid ID type. Please enter 1 for Citizen ID or 2 for Passport: ";
         }
@@ -83,7 +81,7 @@ void Guest::signup() {
     do {
         cout << "Confirm registration with your password: ";
         cin >> confirmPassword;
-        cin.ignore(); // Ignore leftover newline
+        cin.ignore();
         if (confirmPassword.empty()) {
             cout << "Password confirmation cannot be left blank. Please enter again.\n";
         } else if (confirmPassword != password) {
@@ -94,9 +92,7 @@ void Guest::signup() {
     creditPoints = 10;
     rating = -1;
     cout << "Registration successful! You have been credited with 10 points.\n";
-
-    // Save data to CSV file
-    ofstream file("members.csv", ios::app); // Open the file in append mode
+    ofstream file("members.csv", ios::app);
     if (file.is_open()) {
         file << username << ","
              << password << ","
@@ -121,7 +117,7 @@ void Guest::viewCarpoolListings() {
     cout << "Available carpool listings (Passenger rating: 1-3):\n";
     cout << "If want to book or see more, please sign up!\n";
     if (file.is_open()) {
-        getline(file, line); // Skip header
+        getline(file, line); 
         while (getline(file, line)) {
             stringstream ss(line);
             vector<string> details;
@@ -129,7 +125,7 @@ void Guest::viewCarpoolListings() {
             while (getline(ss, detail, ',')) {
                 details.push_back(detail);
             }
-            if (stoi(details[9]) <= 3) { // Check rating at the 10th column
+            if (stoi(details[9]) <= 3) { 
                 cout << "Carpool from " << details[0] << " to " << details[1] << " at " << details[2]
                      << " on " << details[3] << ", " << details[7] << " seats available, " 
                      << details[8] << " credit points per passenger, Rating: " << details[9] << "\n";

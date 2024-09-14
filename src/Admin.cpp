@@ -2,17 +2,17 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+using namespace std;
 
 Admin::Admin() : isAuthenticated(false) {}
 void Admin::loadAdminData() {
-    std::ifstream file("admin.csv");
-    std::string line;
+    ifstream file("admin.csv");
+    string line;
     while (getline(file, line)) {
-        std::istringstream iss(line);
-        std::string username, password;
+        istringstream iss(line);
+        string username, password;
         getline(iss, username, ',');
         getline(iss, password, ',');
-        // Assuming first line as header
         if (username != "username") { 
             this->username = username;
             this->password = password;
@@ -21,57 +21,56 @@ void Admin::loadAdminData() {
     file.close();
 }
 
-bool Admin::login(const std::string& enteredUsername, const std::string& enteredPassword) {
-    std::ifstream file("admin.csv");
-    std::string line, username, password;
-    std::getline(file, line); // Skip header
+bool Admin::login(const string& enteredUsername, const string& enteredPassword) {
+    ifstream file("admin.csv");
+    string line, username, password;
+    getline(file, line);
 
     while (getline(file, line)) {
-        std::istringstream iss(line);
+        istringstream iss(line);
         getline(iss, username, ',');
         getline(iss, password, ',');
         if (enteredUsername == username && enteredPassword == password) {
             isAuthenticated = true;
-            std::cout << "Login successful.\n";
+            cout << "Login successful.\n";
             file.close();
             return true;
         }
     }
 
-    std::cout << "Login failed. Please check your username and password.\n";
+    cout << "Login failed. Please check your username and password.\n";
     file.close();
     return false;
 }
 
 void Admin::viewAllUsers() const {
     if (!isAuthenticated) {
-        std::cout << "Access denied. Please log in first.\n";
+        cout << "Access denied. Please log in first.\n";
         return;
     }
-    std::cout << "Displaying all users:\n";
-    std::ifstream file("members.csv");
-    std::string line;
+    cout << "Displaying all users:\n";
+    ifstream file("members.csv");
+    string line;
     while (getline(file, line)) {
-        std::cout << line << std::endl;
+        cout << line << endl;
     }
     file.close();
 }
 
 void Admin::viewAllCarpools() const {
     if (!isAuthenticated) {
-        std::cout << "Access denied. Please log in first.\n";
+        cout << "Access denied. Please log in first.\n";
         return;
     }
-    std::cout << "Displaying all carpool listings:\n";
-    std::ifstream file("carpool.csv");
-    std::string line;
+    cout << "Displaying all carpool listings:\n";
+    ifstream file("carpool.csv");
+    string line;
     while (getline(file, line)) {
-        std::cout << line << std::endl;
+        cout << line << endl;
     }
     file.close();
 }
 
-bool Admin::validateCredentials(const std::string& username, const std::string& password) const {
-    // Assuming credentials were loaded
+bool Admin::validateCredentials(const string& username, const string& password) const {
     return this->username == username && this->password == password;
 }
