@@ -35,6 +35,10 @@ bool Member::validateCredentials(const string& username, const string& password)
     return it != memberCredentials.end() && it->second.second == password;
 }
 
+string Member::getUserName() const {
+    return username;
+}
+
 bool Member::login(const string& inputUsername, const string& inputPassword) {
     if (validateCredentials(inputUsername, inputPassword)) {
         isMemberAuthenticated = true;
@@ -156,7 +160,7 @@ void Member::editProfile() {
                 case 1:
                     cout << "Enter new password: ";
                     getline(cin, userDetails[1]);
-                    cout << "Password has been updated successfully.\n";
+                    cout << "Password has been updated successfully. Please restart app to use new password.\n";
                     break;
                 case 2:
                     cout << "Enter new phone number: ";
@@ -274,6 +278,8 @@ void Member::bookCarpool() {
             cout << "No eligible carpools available.\n";
             return;
         }
+        cout << "Available carpools that you can requests: " << endl;
+        displayCarpools(eligibleCarpools);
 
         cout << "\nOptions:\n";
         cout << "1. Book a carpool\n";
@@ -286,13 +292,10 @@ void Member::bookCarpool() {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         if (choice == 1) {
-            cout << "\nAvailable carpools:\n";
-            displayCarpools(eligibleCarpools);
             cout << "Enter the number of the carpool you want to book: ";
             int bookingChoice;
             cin >> bookingChoice;
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
             if (bookingChoice > 0 && bookingChoice <= static_cast<int>(eligibleCarpools.size())) {
                 const auto& selectedCarpool = eligibleCarpools[bookingChoice - 1];
                 ofstream bookingFile("bookingRequests.csv", ios::app);
@@ -403,11 +406,11 @@ void Member::manageBookings() {
     int choice;
     do {
         if (userBookings.empty()) {
-            cout << "You have no active bookings.\n";
+            cout << "You have no active bookings. Try booking a carpool now!\n";
             break;
         }
 
-        cout << "Active bookings:\n---------------\n";
+        cout << "This is your current active bookings:\n---------------\n";
         for (const auto& booking : userBookings) {
             cout << booking << "\n";
         }
@@ -430,14 +433,16 @@ void Member::manageBookings() {
                 bookingLines.erase(bookingLines.begin() + actualIndex);
 
                 ofstream outFile("bookingRequests.csv");
-                outFile << "Header,If,Needed\n";
                 for (const auto& l : bookingLines) {
                     outFile << l << "\n";
                 }
                 outFile.close();
                 cout << "Booking unlisted successfully.\n";
                 break;
-            } else {
+            } else if (bookingNumber == 0){
+                cout << "Unlist Booking is cancelled.\n";
+                break;
+            }else{
                 cout << "Invalid booking number entered.\n";
             }
         }
@@ -950,7 +955,7 @@ void Member::rating() {
     cin >> choice;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     if (choice < 1 || choice > static_cast<int>(completedRides.size())) {
-        cout << "Invalid choice. Rating cancelled.\n";
+        cout << "Rating is cancelled.\n";
         return;
     }
 
@@ -1025,7 +1030,7 @@ void Member::purchaseCredits() {
     cout << "Starting the purchase process...\n";
 
     string inputPassword;
-    cout << "Please enter your password for verification: ";
+    cout << "Please enter your password for verification (New password will not work until you restart the app!): ";
     cin >> inputPassword;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');  
 

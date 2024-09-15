@@ -12,6 +12,7 @@ private:
     std::string fullname;
     std::map<std::string, std::pair<std::string, std::string>> memberCredentials;
     bool validateCredentials(const std::string& username, const std::string& password) const;
+     
 
 public:
     Member();
@@ -29,6 +30,8 @@ public:
     void purchaseCredits();
     void manageBookings();
     void transferCredits(const std::string& fromUser, const std::string& toUser, int amount);
+    std::string getUserName() const;
+    int getCredits() const; 
 };
 
 #endif

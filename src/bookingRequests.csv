@@ -1,4 +1,3 @@
-Header,If,Needed
 Hanoi,Danang,08:00 AM,2024-09-15,Toyota Camry,Red,DN1234CA,4,10,4,3,Tran Dinh Hai,1,Nguyen Van A,Completed
 Hanoi,Danang,08:00 AM,2024-09-15,Toyota Camry,Red,DN1234CA,4,10,4,3,Tran Dinh Hai,1,Nguyen Van D,Completed
 Hanoi,Danang,08:00 AM,2024-09-15,Toyota Camry,Red,DN1234CA,4,10,4,3,Tran Dinh nam,1,Nguyen Van D,Completed
@@ -12,7 +11,6 @@ Hanoi,Danang,03:00 PM,2024-09-22,Chevrolet Impala,Black,HN9012CI,3,15,4,2,Nguyen
 Danang,Hue,04:00 PM,2024-09-23,Ford Fiesta,Red,DN3456FF,4,14,3,3,Tran Thi Lua,2,Doan Khanh Linh,Pending
 Hanoi,Ho Chi Minh City,05:00 PM,2024-09-24,Lexus RX,Gray,HN7890LX,3,18,4,3,Le Quang Anh,1,Duong Van Quan,Pending
 Ho Chi Minh City,Hanoi,06:00 PM,2024-09-25,Volvo XC90,Blue,HCM4567VX,5,22,5,4,Doan Khanh Linh,3,Phan Thi Ngoc,Pending
-Hue,Ho Chi Minh City,08:00 AM,2024-09-27,Tesla Model S,Silver,HUE5678TS,4,30,5,5,Phan Thi Ngoc,0,Tran Dinh Hai,Pending
 Hanoi,Ho Chi Minh City,05:00 PM,2024-09-24,Lexus RX,Gray,HN7890LX,3,18,4,3,Le Quang Anh,1,Tran Dinh Hai,Pending
 Hanoi,Hue,09:00 AM,2024-09-28,Mercedes-Benz C-Class,Black,HN2345MB,3,17,4,3,Bui Tien Dung,1,Tran Dinh Hai,Pending
 Hanoi,Hue,09:00 AM,2024-09-28,Mercedes-Benz C-Class,Black,HN2345MB,3,17,4,3,Bui Tien Dung,1,Tran Dinh Hai,Pending

@@ -71,7 +71,6 @@ bool Guest::isIdNumberTaken(const string& idNumber) {
 }
 
 void Guest::signup() {
-    cout << "\n============SIGN-UP MENU============\n";
     string input;
     do {
         cout << "Enter username: ";
@@ -151,7 +150,6 @@ void Guest::signup() {
 void Guest::viewCarpoolListings() {
     ifstream file("carpool.csv");
     string line;
-    cout << "\n============Carpool Listings============\n";
     cout << "Available carpool listings (Ratings 1-3 only):\n";
     cout << "If you want to book or see more, please sign up!\n";
     if (file.is_open()) {
