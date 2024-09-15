@@ -1,5 +1,4 @@
 departureLocation,destinationLocation,departureTime,date,vehicleModel,vehicleColor,plateNumber,availableSeats,contributionPerPassenger,rating,minimumPassengerRating,driverName,currentBookedSeats
-Hanoi,Ho Chi Minh City,09:00 AM,2024-09-16,Honda Civic,Blue,HN5678HC,3,15,3,2,Tran Dinh Hai,0
 Danang,Hanoi,10:00 AM,2024-09-17,Ford Focus,Green,DN7890FD,2,12,5,4,Tran Dinh Nam,2
 Hue,Hanoi,11:00 AM,2024-09-18,Hyundai Sonata,Black,HUE1234HY,3,8,3,1,Nguyen Van Bao,0
 Hanoi,Hue,12:00 PM,2024-09-19,Toyota Prius,Silver,HN5678TP,5,9,4,3,Pham Quoc Tuan,3
@@ -13,3 +12,5 @@ Hanoi,Danang,07:00 PM,2024-09-26,Kia Optima,White,HN1234KO,2,11,4,1,Duong Van Qu
 Hue,Ho Chi Minh City,08:00 AM,2024-09-27,Tesla Model S,Silver,HUE5678TS,4,30,5,5,Phan Thi Ngoc,0
 Hanoi,Hue,09:00 AM,2024-09-28,Mercedes-Benz C-Class,Black,HN2345MB,3,17,4,3,Bui Tien Dung,1
 Ho Chi Minh City,Danang,10:00 AM,2024-09-29,Nissan Leaf,Green,HCM6789NL,5,7,3,2,Nguyen Hoang Nam,3
+Hanoi,Hue,9:00 AM,2024-09-17,Ford,Red,ABC123,5,5,4,3,Tran Dinh Hai,0
+Hanoi,Hue,7:00 AM,2024-09-17,Ford,red,abc123,4,3,5,3,Tran Dinh Hai,0
