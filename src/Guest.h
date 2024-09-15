@@ -24,6 +24,8 @@ private:
     bool isValidFullName(const std::string& name);
     bool isValidEmail(const std::string& email);
     bool isValidIdType(int idTypeOption);
+    bool isValidPhoneNumber(const std::string& number);
+    void saveToFile() const;
 };
 
 #endif // GUEST_H

@@ -3,95 +3,113 @@
 #include <fstream>
 #include <regex>
 #include <sstream>
+#include <limits>
 using namespace std;
 
-Guest::Guest() : creditPoints(0) {}
+Guest::Guest() : creditPoints(10), rating(-1) {}
 
 void Guest::signup() {
     cout << "\n============SIGN-UP MENU============\n";
-
+    string input;
     do {
         cout << "Enter username: ";
-        getline(cin, username);
-        if (username.empty()) {
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        getline(cin, input);
+        if (input.empty()) {
             cout << "Username cannot be left blank. Please enter again.\n";
+        }else{
+            username = input;
         }
     } while (username.empty());
 
     do {
         cout << "Enter password (at least 8 characters): ";
-        cin >> password;
-        cin.ignore();
-        if (password.empty()) {
-            cout << "Password cannot be left blank. Please enter again.\n";
-        } else if (!isValidPassword(password)) {
-            cout << "Invalid password. Please try again.\n";
-        }
-    } while (password.empty() || !isValidPassword(password));
+        getline(cin, password);
+    } while (!isValidPassword(password));
 
     do {
-        cout << "Enter full name (letters and spaces only): ";
+        cout << "Enter full name: ";
         getline(cin, fullName);
-        if (fullName.empty()) {
-            cout << "Full name cannot be left blank. Please enter again.\n";
-        } else if (!isValidFullName(fullName)) {
-            cout << "Invalid full name. Please enter again.\n";
-        }
-    } while (fullName.empty() || !isValidFullName(fullName));
+    } while (fullName.empty());
 
     do {
         cout << "Enter phone number: ";
         getline(cin, phoneNumber);
-        if (phoneNumber.empty()) {
-            cout << "Phone number cannot be left blank. Please enter again.\n";
-        }
     } while (phoneNumber.empty());
 
     do {
-        cout << "Enter email (no spaces, must contain '@'): ";
-        cin >> email;
-        cin.ignore(); 
-        if (email.empty()) {
-            cout << "Email cannot be left blank. Please enter again.\n";
-        } else if (!isValidEmail(email)) {
-            cout << "Invalid email. Please enter again.\n";
-        }
-    } while (email.empty() || !isValidEmail(email));
+        cout << "Enter email (must contain '@'): ";
+        getline(cin, email);
+    } while (!isValidEmail(email));
 
     int idTypeOption;
     do {
         cout << "Enter ID type (1 for Citizen ID, 2 for Passport): ";
-        cin >> idTypeOption;
-        cin.ignore(); 
-        if (!isValidIdType(idTypeOption)) {
-            cout << "Invalid ID type. Please enter 1 for Citizen ID or 2 for Passport: ";
+        if (cin >> idTypeOption) {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            if (isValidIdType(idTypeOption)) {
+                break;
+            }
+        } else {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
-    } while (!isValidIdType(idTypeOption));
+        cout << "Invalid input. Please enter 1 or 2.\n";
+    } while (true);
+
     idType = (idTypeOption == 1) ? "Citizen ID" : "Passport";
 
     do {
         cout << "Enter " << idType << " number: ";
         getline(cin, idNumber);
-        if (idNumber.empty()) {
-            cout << idType << " number cannot be left blank. Please enter again.\n";
-        }
     } while (idNumber.empty());
 
-    string confirmPassword;
-    do {
-        cout << "Confirm registration with your password: ";
-        cin >> confirmPassword;
-        cin.ignore();
-        if (confirmPassword.empty()) {
-            cout << "Password confirmation cannot be left blank. Please enter again.\n";
-        } else if (confirmPassword != password) {
-            cout << "Passwords do not match. Please enter again.\n";
-        }
-    } while (confirmPassword.empty() || confirmPassword != password);
-
-    creditPoints = 10;
-    rating = -1;
     cout << "Registration successful! You have been credited with 10 points.\n";
+    cout << "Please escape Guest mode and login into your account in Member mode to fully experience the app!!!\n";
+    saveToFile();
+}
+
+void Guest::viewCarpoolListings() {
+    ifstream file("carpool.csv");
+    string line;
+    cout << "\n============Carpool Listings============\n";
+    cout << "Available carpool listings (Ratings 1-3 only):\n";
+    cout << "If you want to book or see more, please sign up!\n";
+    if (file.is_open()) {
+        getline(file, line); // Skip header
+        while (getline(file, line)) {
+            stringstream ss(line);
+            vector<string> details;
+            string detail;
+            while (getline(ss, detail, ',')) {
+                details.push_back(detail);
+            }
+            int rating = stoi(details[9]);
+            if (rating >= 1 && rating <= 3) {
+                cout << "Carpool from " << details[0] << " to " << details[1] << " at " << details[2]
+                     << " on " << details[3] << ", " << details[7] << " seats available, " 
+                     << details[8] << " credit points per passenger, Rating: " << rating << "\n";
+            }
+        }
+        file.close();
+    } else {
+        cout << "Unable to open carpool data file.\n";
+    }
+}
+
+bool Guest::isValidPassword(const string& password) {
+    return password.length() >= 8;
+}
+
+bool Guest::isValidEmail(const string& email) {
+    return email.find('@') != string::npos;
+}
+
+bool Guest::isValidIdType(int idTypeOption) {
+    return idTypeOption == 1 || idTypeOption == 2;
+}
+
+void Guest::saveToFile() const {
     ofstream file("members.csv", ios::app);
     if (file.is_open()) {
         file << username << ","
@@ -108,53 +126,4 @@ void Guest::signup() {
     } else {
         cout << "Error: Could not open file to save data.\n";
     }
-}
-
-void Guest::viewCarpoolListings() {
-    ifstream file("carpool.csv");
-    string line;
-    cout << "\n============Carpool Listings============\n";
-    cout << "Available carpool listings (Passenger rating: 1-3):\n";
-    cout << "If want to book or see more, please sign up!\n";
-    if (file.is_open()) {
-        getline(file, line); 
-        while (getline(file, line)) {
-            stringstream ss(line);
-            vector<string> details;
-            string detail;
-            while (getline(ss, detail, ',')) {
-                details.push_back(detail);
-            }
-            if (stoi(details[9]) <= 3) { 
-                cout << "Carpool from " << details[0] << " to " << details[1] << " at " << details[2]
-                     << " on " << details[3] << ", " << details[7] << " seats available, " 
-                     << details[8] << " credit points per passenger, Rating: " << details[9] << "\n";
-            }
-        }
-        file.close();
-    } else {
-        cout << "Unable to open carpool data file.\n";
-    }
-}
-
-bool Guest::isValidPassword(const std::string& password) {
-    return password.length() >= 8; 
-}
-
-bool Guest::isValidFullName(const std::string& name) {
-    for (char c : name) {
-        if (!isalpha(c) && c != ' ') {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool Guest::isValidEmail(const std::string& email) {
-    const std::regex emailRegex(R"(^[^@]+@[^@]+\.[a-zA-Z]{2,})");
-    return std::regex_match(email, emailRegex);
-}
-
-bool Guest::isValidIdType(int idTypeOption) {
-    return idTypeOption == 1 || idTypeOption == 2;
 }
