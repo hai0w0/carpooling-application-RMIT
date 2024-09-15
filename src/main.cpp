@@ -48,6 +48,8 @@ int main() {
                 bool continueGuestSession = true;
     
                 while (continueGuestSession) {
+                    cout << "_____________________________\n";
+                    cout << "------------\n";
                     cout << "\nPlease choose an option:" << endl;
                     cout << "1. Sign Up" << endl;
                     cout << "2. View Carpool Listings" << endl;
@@ -87,6 +89,8 @@ int main() {
 
                 while (!MemberisLoggedIn) {
                     string Member_username, Member_password;
+                    cout << "_____________________________\n";
+                    cout << "------------\n";
                     cout << "Enter username: ";
                     cin >> Member_username;
                     cout << "Enter password: ";
@@ -100,6 +104,8 @@ int main() {
                 }
 
                 while (MembercontinueSession && MemberisLoggedIn) {
+                    cout << "_____________________________\n";
+                    cout << "------------\n";
                     cout << "\nPlease choose an option:" << endl;
                     cout << "1. View your Profile Information" << endl;
                     cout << "2. Manage your Carpool Booking" << endl;
@@ -123,51 +129,70 @@ int main() {
                             cout << "Finish view profile";
                             break;
                         case 2:
-                            cout << "\nManage Bookings for Passenger functionality is chosen.\n";
+                            cout << "\n_____________________________\n";
+                            cout << "------------\n";
+                            cout << "Manage Bookings for Passenger functionality is chosen.\n";
                             member.manageBookings();
                             break;
                         case 3:
                             // Implement Book Carpool functionality
+                            cout << "_____________________________\n";
                             cout << "Book Carpool functionality is chosen.\n";
                             member.bookCarpool();
                             break;
                         case 4:
                             // Implement List Carpool functionality
+                            cout << "_____________________________\n";
+                            cout << "------------\n";
                             cout << "List Carpool functionality is chosen.\n";
                             member.listCarpool();
                             break;
                         case 5:
                             // Implement Manage Passenger Requests functionality
+                            cout << "_____________________________\n";
                             cout << "Manage Passenger Requests is chosen.\n";
                             member.manageRequests();
                             break;
                         case 6:
                             // Implement Cancellation functionality
+                            cout << "_____________________________\n";
                             cout << "Confirm carpool Ride is chosen.\n";
                             member.confirmCarpoolRides();
                             break;
                         case 7:
                             // Implement Rating functionality
+                            cout << "_____________________________\n";
+                            cout << "------------\n";
                             cout << "You have chosen the Rating option.\n";
                             member.rating();
                             break;
                         case 8:
+                            cout << "_____________________________\n";
+                            cout << "------------\n";
                             cout << "You have chosen the Purchase Credit option. Each credit is worth $1." << endl;
                             member.purchaseCredits();
                             break;
                         case 9:
+                            cout << "_____________________________\n";
+                            cout << "------------\n";
                             cout << "You have chosen the Unlist Carppol option." << endl;
                             member.unlistCarpool();
                             break;
                         case 10:
+                            cout << "_____________________________\n";
+                            cout << "------------\n";
                             cout << "You have chosen the Edit Profile option." << endl;
                             member.editProfile();
                             break;
                         case 11:
+                            cout << "_____________________________\n";
+                            cout << "------------\n";
                             cout << "Exiting Member mode...\n";
                             MembercontinueSession = false; // Exit the member session
                             break;
                         default:
+                            cout << "_____________________________\n";
+                            cout << "------------\n";
                             cout << "Invalid choice, please try again." << endl;
                             break;
                     }
