@@ -4,9 +4,71 @@
 #include <regex>
 #include <sstream>
 #include <limits>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
 Guest::Guest() : creditPoints(10), rating(-1) {}
+
+bool Guest::isUsernameTaken(const string& username) {
+    ifstream file("members.csv");
+    string line;
+    getline(file, line);
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string existingUsername;
+        getline(ss, existingUsername, ',');
+        if (existingUsername == username) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Guest::isPhoneNumberTaken(const string& phoneNumber) {
+    ifstream file("members.csv");
+    string line;
+    getline(file, line);
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string field;
+        for (int i = 0; i < 3; i++) getline(ss, field, ',');
+        if (field == phoneNumber) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Guest::isEmailTaken(const string& email) {
+    ifstream file("members.csv");
+    string line;
+    getline(file, line);
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string field;
+        for (int i = 0; i < 4; i++) getline(ss, field, ',');
+        if (field == email) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Guest::isIdNumberTaken(const string& idNumber) {
+    ifstream file("members.csv");
+    string line;
+    getline(file, line);
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string field;
+        for (int i = 0; i < 6; i++) getline(ss, field, ',');
+        if (field == idNumber) {
+            return true;
+        }
+    }
+    return false;
+}
 
 void Guest::signup() {
     cout << "\n============SIGN-UP MENU============\n";
@@ -17,7 +79,9 @@ void Guest::signup() {
         getline(cin, input);
         if (input.empty()) {
             cout << "Username cannot be left blank. Please enter again.\n";
-        }else{
+        } else if (isUsernameTaken(input)) {
+            cout << "Username is already taken. Please choose a different username.\n";
+        } else {
             username = input;
         }
     } while (username.empty());
@@ -35,12 +99,22 @@ void Guest::signup() {
     do {
         cout << "Enter phone number: ";
         getline(cin, phoneNumber);
+        if (isPhoneNumberTaken(phoneNumber)) {
+            cout << "This phone number is already registered. Please use a different number.\n";
+            phoneNumber.clear();
+        }
     } while (phoneNumber.empty());
 
     do {
         cout << "Enter email (must contain '@'): ";
         getline(cin, email);
-    } while (!isValidEmail(email));
+        if (!isValidEmail(email)) {
+            cout << "Invalid email format. Please enter a valid email address.\n";
+        } else if (isEmailTaken(email)) {
+            cout << "This email is already registered. Please use a different email.\n";
+            email.clear();
+        }
+    } while (!isValidEmail(email) || email.empty());
 
     int idTypeOption;
     do {
@@ -62,12 +136,17 @@ void Guest::signup() {
     do {
         cout << "Enter " << idType << " number: ";
         getline(cin, idNumber);
+        if (isIdNumberTaken(idNumber)) {
+            cout << "This ID number is already registered. Please check your input.\n";
+            idNumber.clear();
+        }
     } while (idNumber.empty());
 
     cout << "Registration successful! You have been credited with 10 points.\n";
     cout << "Please escape Guest mode and login into your account in Member mode to fully experience the app!!!\n";
     saveToFile();
 }
+
 
 void Guest::viewCarpoolListings() {
     ifstream file("carpool.csv");

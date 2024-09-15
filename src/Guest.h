@@ -19,7 +19,10 @@ private:
     std::string idNumber;
     int creditPoints;
     int rating;
-
+    bool isUsernameTaken(const std::string& username);
+    bool isPhoneNumberTaken(const std::string& phoneNumber);
+    bool isEmailTaken(const std::string& email);
+    bool isIdNumberTaken(const std::string& idNumber);
     bool isValidPassword(const std::string& password);
     bool isValidFullName(const std::string& name);
     bool isValidEmail(const std::string& email);
@@ -29,3 +32,4 @@ private:
 };
 
 #endif // GUEST_H
+    
