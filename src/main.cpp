@@ -53,7 +53,7 @@ void showWelcomeScreen() {
     cout << "====================================================" << endl;
     cout << "EEET2482/EEET2653/COSC2082/COSC2721 Group Assignment" << endl;
     cout << "Instructor: Dr. Ling Huo Chong, Dr. Jeff Nijsse" << endl;
-    cout << "Group: Group No." << endl;
+    cout << "Group: Group No.9" << endl;
     cout << "s4041605, Tran Dinh Hai" << endl;
     cout << "s3996843, Nguyen Phu Minh Quang" << endl;
     cout << "s4045608, Tran Quoc Hung" << endl;
