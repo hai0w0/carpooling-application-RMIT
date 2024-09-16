@@ -165,7 +165,7 @@ void Guest::viewCarpoolListings() {
             if (rating >= 1 && rating <= 3) {
                 cout << "Carpool from " << details[0] << " to " << details[1] << " at " << details[2]
                      << " on " << details[3] << ", " << details[7] << " seats available, " 
-                     << details[8] << " credit points per passenger, Rating: " << rating << "\n";
+                     << details[8] << " credit points per passenger.\n";
             }
         }
         file.close();

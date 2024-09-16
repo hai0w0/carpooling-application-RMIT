@@ -236,6 +236,7 @@ void Member::bookCarpool() {
         }
     }
     memberFile.close();
+
     vector<vector<string>> eligibleCarpools;
     ifstream carpoolFile("carpool.csv");
     string carpoolLine;
@@ -264,13 +265,29 @@ void Member::bookCarpool() {
         for (size_t i = 0; i < carpools.size(); i++) {
             const auto& carpool = carpools[i];
             cout << i + 1 << ". Route: " << carpool[0] << " to " << carpool[1]
-                      << ", Departure: " << carpool[2] << " on " << carpool[3]
-                      << ", Vehicle: " << carpool[4] << " (" << carpool[5] << ", " << carpool[6] << ")"
-                      << ", Seats Available: " << (stoi(carpool[7]) - stoi(carpool[12]))
-                      << ", Price per Seat: $" << carpool[8]
-                      << ", Driver Rating: " << carpool[9]
-                      << ", Driver: " << carpool[11] << "\n";
+                 << ", Departure: " << carpool[2] << " on " << carpool[3]
+                 << ", Vehicle: " << carpool[4] << " (" << carpool[5] << ", " << carpool[6] << ")"
+                 << ", Seats Available: " << (stoi(carpool[7]) - stoi(carpool[12]))
+                 << ", Price per Seat: $" << carpool[8]
+                 << ", Driver Rating: " << carpool[9]
+                 << ", Driver: " << carpool[11] << "\n";
         }
+    };
+
+    auto getFilteredCarpools = [&](const vector<vector<string>>& carpools,
+                                   const string& departure, const string& destination,
+                                   int maxPrice, int minDriverRating) {
+        vector<vector<string>> filtered;
+        for (const auto& carpool : carpools) {
+            if ((!departure.empty() && carpool[0] != departure) ||
+                (!destination.empty() && carpool[1] != destination) ||
+                (maxPrice > 0 && stoi(carpool[8]) > maxPrice) ||
+                (minDriverRating > 0 && stoi(carpool[9]) < minDriverRating)) {
+                continue;
+            }
+            filtered.push_back(carpool);
+        }
+        return filtered;
     };
 
     while (true) {
@@ -278,7 +295,7 @@ void Member::bookCarpool() {
             cout << "No eligible carpools available.\n";
             return;
         }
-        cout << "Available carpools that you can requests: " << endl;
+        cout << "Available carpools that you can request:\n";
         displayCarpools(eligibleCarpools);
 
         cout << "\nOptions:\n";
@@ -288,72 +305,99 @@ void Member::bookCarpool() {
         cout << "Enter your choice: ";
 
         int choice;
-        cin >> choice;
+        while (!(cin >> choice) || choice < 1 || choice > 3) {
+            cout << "Invalid input. Please enter a number between 1 and 3: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         if (choice == 1) {
-            cout << "Enter the number of the carpool you want to book: ";
+            cout << "Enter the number of the carpool you want to book (0 to cancel): ";
             int bookingChoice;
-            cin >> bookingChoice;
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            if (bookingChoice > 0 && bookingChoice <= static_cast<int>(eligibleCarpools.size())) {
-                const auto& selectedCarpool = eligibleCarpools[bookingChoice - 1];
-                ofstream bookingFile("bookingRequests.csv", ios::app);
-                for (size_t i = 0; i < selectedCarpool.size(); ++i) {
-                    bookingFile << selectedCarpool[i];
-                    if (i < selectedCarpool.size() - 1) bookingFile << ",";
-                }
-                bookingFile << "," << fullName << ",Pending\n";
-                bookingFile.close();
-                cout << "Booking request created successfully. Status: Pending.\n";
-                return;
-            } else {
-                cout << "Invalid choice. Please try again.\n";
+            while (!(cin >> bookingChoice) || bookingChoice < 0 || bookingChoice > static_cast<int>(eligibleCarpools.size())) {
+                cout << "Invalid input. Please enter a number between 0 and " << eligibleCarpools.size() << ": ";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
             }
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            if (bookingChoice == 0) {
+                cout << "Booking cancelled.\n";
+                continue;
+            }
+
+            const auto& selectedCarpool = eligibleCarpools[bookingChoice - 1];
+            ofstream bookingFile("bookingRequests.csv", ios::app);
+            for (size_t i = 0; i < selectedCarpool.size(); ++i) {
+                bookingFile << selectedCarpool[i];
+                if (i < selectedCarpool.size() - 1) bookingFile << ",";
+            }
+            bookingFile << "," << fullName << ",Pending\n";
+            bookingFile.close();
+            cout << "Booking request created successfully. Status: Pending.\n";
+            return;
         } else if (choice == 2) {
             string departure, destination;
             int maxPrice, minDriverRating;
 
-            cout << "Enter departure location (Hanoi // Danang // Hue // Ho Chi Minh City) (leave blank for no filter): ";
-            getline(cin, departure);
+            auto getValidLocation = [](const string& prompt, const vector<string>& validLocations) -> string {
+                string input;
+                do {
+                    cout << prompt;
+                    getline(cin, input);
+                    transform(input.begin(), input.end(), input.begin(), ::tolower);
+                    bool isValid = any_of(validLocations.begin(), validLocations.end(), [&](const string& validLocation) {
+                        string lowerCaseLocation = validLocation;
+                        transform(lowerCaseLocation.begin(), lowerCaseLocation.end(), lowerCaseLocation.begin(), ::tolower);
+                        return input == lowerCaseLocation;
+                    });
+                    if (!isValid) {
+                        cout << "Invalid location. Please enter one of the allowed cities (Hanoi, Danang, Hue, Ho Chi Minh City).\n";
+                    } else {
+                        return input;
+                    }
+                } while (true);
+            };
 
-            cout << "Enter destination location (Hanoi // Danang // Hue // Ho Chi Minh City) (leave blank for no filter): ";
-            getline(cin, destination);
+            vector<string> validLocations = {"Hanoi", "Danang", "Hue", "Ho Chi Minh City"};
+            departure = getValidLocation("Enter departure location (Hanoi, Danang, Hue, Ho Chi Minh City): ", validLocations);
+            destination = getValidLocation("Enter destination location (Hanoi, Danang, Hue, Ho Chi Minh City): ", validLocations);
+
+            if (departure == destination) {
+            cout << "Error: Departure and destination locations cannot be the same.\n";
+            return;
+            }
 
             cout << "Enter maximum price per seat (0 for no limit): ";
-            cin >> maxPrice;
+            while (!(cin >> maxPrice) || maxPrice < 0) {
+                cout << "Invalid input. Please enter a non-negative number: ";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-            cout << "Enter minumum Driver's rating (0 for no limit): ";
-            cin >> minDriverRating;
+            cout << "Enter minimum Driver's rating (0 for no limit): ";
+            while (!(cin >> minDriverRating) || minDriverRating < 0 || minDriverRating > 5) {
+                cout << "Invalid input. Please enter a number between 0 and 5: ";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-            auto filteredCarpools = eligibleCarpools;
-            filteredCarpools.erase(
-                remove_if(filteredCarpools.begin(), filteredCarpools.end(),
-                    [&](const vector<string>& carpool) {
-                        return (!departure.empty() && carpool[0] != departure) ||
-                               (!destination.empty() && carpool[1] != destination) ||
-                               (maxPrice > 0 && stoi(carpool[8]) > maxPrice) ||
-                               (minDriverRating > 0 && stoi(carpool[9]) < minDriverRating);
-                    }),
-                filteredCarpools.end()
-            );
-            if (!filteredCarpools.empty()){
+            auto filteredCarpools = getFilteredCarpools(eligibleCarpools, departure, destination, maxPrice, minDriverRating);
+            if (!filteredCarpools.empty()) {
                 eligibleCarpools = filteredCarpools;
                 cout << "\nFiltered carpools:\n";
                 displayCarpools(eligibleCarpools);
-            }else{
+            } else {
                 cout << "No carpools match your filters.\n";
             }
         } else if (choice == 3) {
             return;
-        } else {
-            cout << "Invalid choice. Please try again.\n";
         }
     }
 }
-
 void Member::manageBookings() {
     if (!isMemberAuthenticated) {
         cout << "Access denied. Please log in first.\n";
@@ -457,9 +501,10 @@ void Member::listCarpool() {
 
     string departureLocation, destinationLocation, departureTime, departureDate;
     string vehicleModel, vehicleColor, plateNumber;
-    int availableSeats, contributionPerPassenger;
+    int availableSeats, contributionPerPassenger, minimumPassengerRating;
     int driverRating = 0;
     string fullName;
+
     ifstream memberFile("members.csv");
     string memberLine;
     getline(memberFile, memberLine);
@@ -478,6 +523,11 @@ void Member::listCarpool() {
     }
     memberFile.close();
 
+    if (driverRating == -1) {
+        cout << "Your rating needs to be 1 or higher to list a carpool. Please complete some rides as a passenger first.\n";
+        return;
+    }
+
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     auto getValidLocation = [](const string& prompt, const vector<string>& validLocations) -> string {
@@ -494,44 +544,93 @@ void Member::listCarpool() {
             if (!isValid) {
                 cout << "Invalid location. Please enter one of the allowed cities (Hanoi, Danang, Hue, Ho Chi Minh City).\n";
             } else {
-                break;
+                return input;
             }
         } while (true);
-        return input;
     };
 
     vector<string> validLocations = {"Hanoi", "Danang", "Hue", "Ho Chi Minh City"};
     departureLocation = getValidLocation("Enter departure location (Hanoi, Danang, Hue, Ho Chi Minh City): ", validLocations);
     destinationLocation = getValidLocation("Enter destination location (Hanoi, Danang, Hue, Ho Chi Minh City): ", validLocations);
 
-    cout << "Enter departure time (e.g., 9:00 AM): ";
-    getline(cin, departureTime);
-    cout << "Enter departure date (e.g., 2024-09-17): ";
-    getline(cin, departureDate);
+    if (departureLocation == destinationLocation) {
+        cout << "Error: Departure and destination locations cannot be the same.\n";
+        return;
+    }
+
+    auto getValidTime = []() -> string {
+        string input;
+        while (true) {
+            cout << "Enter departure time (e.g., 9:00 AM): ";
+            getline(cin, input);
+            istringstream ss(input);
+            int hours, minutes;
+            char colon, ampm[3];
+            if (ss >> hours >> colon >> minutes >> ampm &&
+                colon == ':' && hours >= 1 && hours <= 12 && minutes >= 0 && minutes <= 59 &&
+                (strcmp(ampm, "AM") == 0 || strcmp(ampm, "PM") == 0)) {
+                return input;
+            }
+            cout << "Invalid time format. Please use HH:MM AM/PM format.\n";
+        }
+    };
+    departureTime = getValidTime();
+
+    auto getValidDate = []() -> string {
+        string input;
+        while (true) {
+            cout << "Enter departure date (YYYY-MM-DD): ";
+            getline(cin, input);
+            istringstream ss(input);
+            int year, month, day;
+            char dash1, dash2;
+            if (ss >> year >> dash1 >> month >> dash2 >> day &&
+                dash1 == '-' && dash2 == '-' &&
+                year >= 2024 && month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+                return input;
+            }
+            cout << "Invalid date format. Please use YYYY-MM-DD format.\n";
+        }
+    };
+    departureDate = getValidDate();
+
     cout << "Enter vehicle model: ";
     getline(cin, vehicleModel);
+
     cout << "Enter vehicle color: ";
     getline(cin, vehicleColor);
+
     cout << "Enter plate number: ";
     getline(cin, plateNumber);
-    cout << "Enter number of available seats: ";
-    cin >> availableSeats;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cout << "Enter contribution per passenger: ";
-    cin >> contributionPerPassenger;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    auto getValidNumber = [](const string& prompt, int min, int max) -> int {
+        int value;
+        while (true) {
+            cout << prompt;
+            if (cin >> value && value >= min && value <= max) {
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                return value;
+            }
+            cout << "Invalid input. Please enter a number between " << min << " and " << max << ".\n";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    };
+
+    availableSeats = getValidNumber("Enter number of available seats (1-10): ", 1, 50);
+    contributionPerPassenger = getValidNumber("Enter contribution per passenger (1-100): ", 1, 100);
+    minimumPassengerRating = getValidNumber("Enter minimumPassengerRating (-1-5) (-1 if you allow new members to request your carpool): ", -1, 5);
 
     // Saving to carpool.csv
     ofstream outFile("carpool.csv", ios::app);
     outFile << departureLocation << ',' << destinationLocation << ',' << departureTime << ','
             << departureDate << ',' << vehicleModel << ',' << vehicleColor << ',' << plateNumber << ','
             << availableSeats << ',' << contributionPerPassenger << ',' << driverRating << ','
-            << "3" << ',' << fullName << ',' << "0" << '\n';
+            << minimumPassengerRating << ',' << fullName << ',' << "0" << '\n';
     outFile.close();
 
     cout << "Carpool listing created successfully!\n";
 }
-
 
 void Member::unlistCarpool() {
     if (!isMemberAuthenticated) {

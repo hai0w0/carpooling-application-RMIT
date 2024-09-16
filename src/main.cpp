@@ -12,11 +12,18 @@ using namespace std;
 
 void clearScreen() {
     #ifdef _WIN32
-        system("cls"); // For Windows OS
+        system("cls");
     #else
-        // For Unix/Linux/macOS based OS
-        std::cout << "\033[2J\033[1;1H"; // ANSI escape code to clear the screen
+        // For Unix/Linux/macOS
+        cout << "\033[2J\033[1;1H";
+        cout.flush();
     #endif
+    
+    for (int i = 0; i < 50; ++i) {
+        cout << endl;
+    }
+    cout << "\033[2J\033[1;1H";  
+    cout.flush();
 }
 
 void showLoadingAnimation(const string& message, int duration) {
