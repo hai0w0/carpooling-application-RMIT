@@ -1,11 +1,9 @@
-***Testing the Guest Function***
-1.To test the Guest functionality, follow these steps:
+***Configuration Requirements***
 
--Configure VSCode for Building and Running Code
 
 -Ensure you have a .vscode directory in your root project folder. Create or modify the following files within this directory:
 
-tasks.json:
+***tasks.json***:
 {
     "version": "2.0.0",
     "tasks": [
@@ -41,7 +39,7 @@ tasks.json:
     ]
 }
 
-launch.json:
+***launch.json***:
 {
   "version": "0.2.0",
   "configurations": [
@@ -69,39 +67,3 @@ launch.json:
   ]
 }
 Note: Adjust paths and commands according to your specific setup if g++ is located elsewhere. (In my PC, it is: C:\\mingw64\\bin\\gcc)
-
-2.Build and Run Using VSCode
-
--Open VSCode and navigate to the Terminal menu.
-
--Open a new terminal on VSCode
-
--Navigate to your src folder:
-    cd src
--Compile the code:
-    g++ main.cpp Guest.cpp Admin.cpp Member.cpp -o output/main
--Run the executable:
-    ./output/main
-
-4.Verify the Output
-
--After running the program, you should see the following prompt:
-
-EEET2482/EEET2653/COSC2082/COSC2721 Group Assignment
-CARPOOLING APPLICATION
-Instructor: Dr. Ling Huo Chong, Dr. Jeff Nijsse
-Group: Group No.
-s4041605, Tran Dinh Hai
-s3996843, Nguyen Phu Minh Quang
-s4045608, Tran Quoc Hung
-s4021259, Tran Van Dat
-
-Use the app as:
-1. Guest
-2. Member
-3. Admin
-Enter your choice:
-
-
-
-****GOOD LUCK****
