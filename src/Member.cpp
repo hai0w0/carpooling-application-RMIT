@@ -346,30 +346,27 @@ void Member::bookCarpool() {
                 do {
                     cout << prompt;
                     getline(cin, input);
-                    transform(input.begin(), input.end(), input.begin(), ::tolower);
                     bool isValid = any_of(validLocations.begin(), validLocations.end(), [&](const string& validLocation) {
-                        string lowerCaseLocation = validLocation;
-                        transform(lowerCaseLocation.begin(), lowerCaseLocation.end(), lowerCaseLocation.begin(), ::tolower);
-                        return input == lowerCaseLocation;
+                        return input == validLocation;
                     });
-                    if (!isValid) {
-                        cout << "Invalid location. Please enter one of the allowed cities (Hanoi, Danang, Hue, Ho Chi Minh City).\n";
+                    if (!isValid && !input.empty()) {
+                        cout << "Invalid location. Please enter one of the allowed cities (Hanoi, Danang, Hue, Ho Chi Minh City) or leave blank for no filter.\n";
                     } else {
                         return input;
                     }
                 } while (true);
             };
 
-            vector<string> validLocations = {"Hanoi", "Danang", "Hue", "Ho Chi Minh City"};
-            departure = getValidLocation("Enter departure location (Hanoi, Danang, Hue, Ho Chi Minh City): ", validLocations);
-            destination = getValidLocation("Enter destination location (Hanoi, Danang, Hue, Ho Chi Minh City): ", validLocations);
+            vector<string> validLocations = {"Hanoi", "Danang", "Hue", "Ho Chi Minh City", "hanoi", "danang", "hue", "ho chi minh city"};
+            departure = getValidLocation("Enter departure location (Hanoi, Danang, Hue, Ho Chi Minh City)(or leave blank for no filter): ", validLocations);
+            destination = getValidLocation("Enter destination location (Hanoi, Danang, Hue, Ho Chi Minh City)(or leave blank for no filter): ", validLocations);
 
-            if (departure == destination) {
-            cout << "Error: Departure and destination locations cannot be the same.\n";
-            return;
+            if (!departure.empty() && !destination.empty() && departure == destination) {
+                cout << "Error: Departure and destination locations cannot be the same.\n";
+                continue;
             }
 
-            cout << "Enter maximum price per seat (0 for no limit): ";
+            cout << "Enter maximum price per seat that you want to pay (0 for no limit): ";
             while (!(cin >> maxPrice) || maxPrice < 0) {
                 cout << "Invalid input. Please enter a non-negative number: ";
                 cin.clear();
