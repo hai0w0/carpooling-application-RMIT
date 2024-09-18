@@ -209,10 +209,11 @@ void memberMode() {
                     clearScreen();
                     cout << "===== Be a Driver =====\n";
                     cout << "1. List Carpool\n";
-                    cout << "2. Manage Passenger Requests\n";
-                    cout << "3. Return to Main Menu\n";
+                    cout << "2. Unlist Carpool\n";
+                    cout << "3. Manage Passenger Requests\n";
+                    cout << "4. Return to Main Menu\n";
                     cout << "Enter your choice: ";
-                    int driverChoice = getValidChoice(3);
+                    int driverChoice = getValidChoice(4);
 
                     switch (driverChoice) {
                         case 1:
@@ -222,10 +223,15 @@ void memberMode() {
                             break;
                         case 2:
                             clearScreen();
+                            cout << "===== Unlist Carpool =====\n";
+                            member.unlistCarpool();
+                            break;
+                        case 3:
+                            clearScreen();
                             cout << "===== Manage Passenger Requests =====\n";
                             member.manageRequests();
                             break;
-                        case 3:
+                        case 4:
                             driverSession = false;
                             break;
                     }

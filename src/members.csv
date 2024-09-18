@@ -5,8 +5,9 @@ noname,12345678,Tran Dinh Hai,0909384,trandinh@gmail.com,Citizen ID,2323123,50,2
 sa,123456789,jduejd,390213,dnuewhd@gmail.com,Passport,312789192,10,1
 no name,12345678,trwer,3271,rewbrjwb@gmail.com,Passport,3214235352,10,-1
 no name2,12345678,roiuweoriw,31928931823901,teiyadah@gmail.com,Passport,42389742894,10,3
-test1,12345678,Nguyen Van A,3192893182391,teiydah@gmail.com,Passport,4238742894,10,4
-test2,12345678,Nguyen Van B,3192893182301,teyadah@gmail.com,Passport,4238942894,10,4
-test3,12345678,Nguyen Van C,3192893123901,teiyaah@gmail.com,Passport,4238974894,10,4
-test4,12345678,Nguyen Van D,3192893123901,teiyaah@gmail.com,Passport,4289742894,10,3
+test1,12345678,Nguyen Van A,3192893182391,teiydah@gmail.com,Passport,4238742894,100,4
+test2,12345678,Nguyen Van B,3192893182301,teyadah@gmail.com,Passport,4238942894,100,5
+test3,12345678,Nguyen Van C,3192893123901,teiyaah@gmail.com,Passport,4238974894,100,5
+test4,12345678,Nguyen Van D,3192893123901,teiyaah@gmail.com,Passport,4289742894,100,5
 test5,12345678,Nguyen Van E,3912893081290,test@gmail.com,Passport,3273892,40,-1
+test7,12345678,tester6,123456789,test6@gmail.com,Passport,223435,10,-1

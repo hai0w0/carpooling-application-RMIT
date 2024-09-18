@@ -395,6 +395,7 @@ void Member::bookCarpool() {
         }
     }
 }
+
 void Member::manageBookings() {
     if (!isMemberAuthenticated) {
         cout << "Access denied. Please log in first.\n";
@@ -709,76 +710,90 @@ void Member::manageRequests() {
         cout << "Access denied. Please log in first.\n";
         return;
     }
-    while (true) { 
-        ifstream bookingsFile("bookingRequests.csv");
-        if (!bookingsFile.is_open()) {
-            cout << "Failed to open booking requests file.\n";
-            return;
-        }
-        string line;
-        getline(bookingsFile, line); 
-        vector<string> userBookings; 
 
-        int bookingIndex = 1;
-        while (getline(bookingsFile, line)) {
-            istringstream ss(line);
-            vector<string> bookingDetails;
-            string detail;
-            while (getline(ss, detail, ',')) {
-                bookingDetails.push_back(detail);
+    vector<string> bookings;
+    ifstream file("bookingRequests.csv");
+    if (!file.is_open()) {
+        cout << "Failed to open booking requests file.\n";
+        return;
+    }
+
+    string line;
+    while (getline(file, line)) {
+        bookings.push_back(line);
+    }
+    file.close();
+    auto DisplayBookings = [&]() {
+        cout << "Active booking requests:\n";
+        cout << "------------------------\n";
+        int displayIndex = 1;
+        vector<int> indexMap;
+        for (int i = 0; i < bookings.size(); i++) {
+            istringstream ss(bookings[i]);
+            vector<string> details;
+            string token;
+            while (getline(ss, token, ',')) {
+                details.push_back(token);
             }
-            if (bookingDetails[11] == fullname && bookingDetails[14] != "Rejected" || bookingDetails[11] == fullname && bookingDetails[14] != "Completed") {
-                ostringstream bookingInfo;
-                bookingInfo << "Booking " << bookingIndex++ << ": "
-                            << "Passenger: " << bookingDetails[13]
-                            << ", Date: " << bookingDetails[3] 
-                            << ", Time: " << bookingDetails[2] 
-                            << ", Departure: " << bookingDetails[0] 
-                            << ", Destination: " << bookingDetails[1] 
-                            << ", Status: " << bookingDetails[14]; 
-                userBookings.push_back(bookingInfo.str());
+            if (details[11] == fullname && (details[14] == "pending" || details[14] == "Pending")) {
+                cout << "Booking " << displayIndex++ << ": "
+                     << "Passenger: " << details[13]
+                     << ", Date: " << details[3]
+                     << ", Time: " << details[2]
+                     << ", Departure: " << details[0]
+                     << ", Destination: " << details[1]
+                     << ", Status: " << details[14] << '\n';
+                indexMap.push_back(i);
             }
         }
-        bookingsFile.close();
-
-        if (userBookings.empty()) {
+        if (displayIndex == 1) {
             cout << "You have no active booking requests.\n";
-            return; 
         }
-        cout << "Active booking requests:\n------------------------\n";
-        for (const auto& booking : userBookings) {
-            cout << booking << "\n";
-        }
-        int choice;
-        cout << "\nOptions:\n";
+        return indexMap;
+    };
+
+    while (true) {
+        vector<int> indexMap = DisplayBookings();
+
+        cout << "Options:\n";
         cout << "1. Accept a booking\n";
         cout << "2. Reject a booking\n";
         cout << "3. Back to menu\n";
         cout << "Enter your choice: ";
+
+        int choice;
         cin >> choice;
+
         if (choice == 1 || choice == 2) {
-            int bookingNumber;
             cout << "Enter the booking number to modify: ";
+            int bookingNumber;
             cin >> bookingNumber;
-            if (bookingNumber > 0 && bookingNumber <= userBookings.size()) {
-                istringstream iss(userBookings[bookingNumber - 1]);
-                vector<string> details;
-                string detail;
-                while (getline(iss, detail, ',')) {
-                    details.push_back(detail);
-                }
-                if (choice == 1 && details[14] == "pending") {
-                    details[14] = "Accepted";
-                } else if (choice == 2) {
-                    details[14] = "Rejected";
-                }
-                cout << "Booking has been " << (choice == 1 ? "accepted" : "rejected") << ".\n";
+
+            if (bookingNumber < 1 || bookingNumber > indexMap.size()) {
+                cout << "Invalid booking number. Please try again.\n";
+                continue;
             }
+
+            int actualIndex = indexMap[bookingNumber - 1];
+            string& selectedBooking = bookings[actualIndex];
+            size_t lastComma = selectedBooking.rfind(',');
+            selectedBooking.replace(lastComma + 1, string::npos, choice == 1 ? "Accepted" : "Rejected");
+
+            // Write changes back to the file
+            ofstream outFile("bookingRequests.csv");
+            for (const auto& line : bookings) {
+                outFile << line << "\n";
+            }
+            outFile.close();
+
+            cout << "Booking has been " << (choice == 1 ? "accepted" : "rejected") << ".\n";
+            system("cls");
         } else if (choice == 3) {
-            return;
+            break;
         }
     }
 }
+
 
 void Member::confirmCarpoolRides() {
     if (!isMemberAuthenticated) {
