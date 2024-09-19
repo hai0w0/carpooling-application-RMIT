@@ -211,9 +211,10 @@ void memberMode() {
                     cout << "1. List Carpool\n";
                     cout << "2. Unlist Carpool\n";
                     cout << "3. Manage Passenger Requests\n";
-                    cout << "4. Return to Main Menu\n";
+                    cout << "4. Confirm Carpool Rides\n";
+                    cout << "5. Return to Main Menu\n";
                     cout << "Enter your choice: ";
-                    int driverChoice = getValidChoice(4);
+                    int driverChoice = getValidChoice(5);
 
                     switch (driverChoice) {
                         case 1:
@@ -232,6 +233,11 @@ void memberMode() {
                             member.manageRequests();
                             break;
                         case 4:
+                            clearScreen();
+                            cout << "===== Confirm Carpools =====\n";
+                            member.confirmCarpoolRides();
+                            break;
+                        case 5:
                             driverSession = false;
                             break;
                     }
