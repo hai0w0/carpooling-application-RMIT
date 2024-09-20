@@ -23,9 +23,15 @@ Ensure you have a `.vscode` directory in your project's root. See the Configurat
 - VSCode (recommended) with C/C++ extensions installed
 
 ### Build and Run
+### Option 1: Run Program in VS Code
 Open VSCode and navigate to the Terminal.
-Compile the code by running: g++ main.cpp Guest.cpp Admin.cpp Member.cpp -o output/main
-Run the executable with: ./output/main
+Locate the src file: cd src
+Compile the code by running: g++ main.cpp Guest.cpp Admin.cpp Member.cpp -o main
+Run the executable: ./main
+
+### Option 2: Run the program normally:
+Locate the src file in the File Explorer
+Locate and run the Group9_Program.exe
 
 ### Verifying Output
 After running the executable, you should see the following prompt:

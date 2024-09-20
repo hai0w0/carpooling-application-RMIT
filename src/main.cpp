@@ -10,6 +10,7 @@
 #include "Carpool.h"
 using namespace std;
 
+// Clears the screen depending on the operating system
 void clearScreen() {
     #ifdef _WIN32
         system("cls");
@@ -19,26 +20,26 @@ void clearScreen() {
         cout.flush();
     #endif
     
-    for (int i = 0; i < 50; ++i) {
+    for (int i = 0; i < 50; ++i) { // Additional method to clear the screen by printing new lines
         cout << endl;
     }
     cout << "\033[2J\033[1;1H";  
     cout.flush();
 }
 
+// Shows loading animation
 void showLoadingAnimation(const string& message, int duration) {
     string dots = "";
     for (int i = 0; i < duration; ++i) {
         clearScreen();
         cout << setw((80 - message.length() - 3) / 2) << " " << message << dots << endl;
         dots += ".";
-        if (dots.length() > 3) dots = "";
-        this_thread::sleep_for(chrono::milliseconds(300));
+        if (dots.length() > 3) dots = ""; // Reset dots after three to keep animation consistent
+        this_thread::sleep_for(chrono::milliseconds(300)); // Pause for 0.3 seconds
     }
 }
 
-
-
+// Displays the welcome screen
 void showWelcomeScreen() {
     clearScreen();
     cout << "====================================================" << endl;
@@ -67,6 +68,8 @@ void showWelcomeScreen() {
     cout << "\nEnter your choice: ";
 }
 
+
+// Validates the user's choice to ensure it's within a specified range
 int getValidChoice(int max) {
     int choice;
     while (!(cin >> choice) || choice < 1 || choice > max) {
@@ -77,6 +80,7 @@ int getValidChoice(int max) {
     return choice;
 }
 
+// Guest mode activated
 void guestMode() {
     Guest guest;
     bool continueGuestSession = true;
@@ -115,6 +119,7 @@ void guestMode() {
     }
 }
 
+// Member mode activated
 void memberMode() {
     Member member;
     member.loadMemberData();
@@ -273,6 +278,7 @@ void memberMode() {
     }
 }
 
+// Admin mode activated
 void adminMode() {
     Admin admin;
     admin.loadAdminData();
@@ -336,6 +342,7 @@ void adminMode() {
     }
 }
 
+// Main loop for Application
 int main() {
     while (true) {
         showWelcomeScreen();
@@ -352,7 +359,7 @@ int main() {
                 adminMode();
                 break;
             case 4:
-                cout << "Thank you for using the Carpooling Application. Goodbye!" << endl;
+                cout << "Thank you for using the Carpooling Application. Goodbye!" << endl; //Print out good bye message
                 return 0;
         }
     }

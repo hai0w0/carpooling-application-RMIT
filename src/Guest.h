@@ -5,11 +5,12 @@
 
 class Guest {
 public:
-    Guest();
-    void signup();
-    void viewCarpoolListings();
+    Guest(); // Default constructor to initialize a Guest object
+    void signup(); // Method to handle guest signup
+    void viewCarpoolListings(); // Method to display carpool listings available
     
 private:
+    // Private variables for sign up
     std::string username;
     std::string password;
     std::string fullName;
@@ -19,6 +20,8 @@ private:
     std::string idNumber;
     int creditPoints;
     int rating;
+
+    // Private methods for validating various pieces of information during signup
     bool isUsernameTaken(const std::string& username);
     bool isPhoneNumberTaken(const std::string& phoneNumber);
     bool isEmailTaken(const std::string& email);
@@ -28,8 +31,7 @@ private:
     bool isValidEmail(const std::string& email);
     bool isValidIdType(int idTypeOption);
     bool isValidPhoneNumber(const std::string& number);
-    void saveToFile() const;
+    void saveToFile() const; // Method to save guest information to a file
 };
 
-#endif // GUEST_H
-    
+#endif

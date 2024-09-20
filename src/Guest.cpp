@@ -8,42 +8,47 @@
 #include <algorithm>
 using namespace std;
 
+// Constructor initializing credits to 10 and rating to -1 (indicative of a new guest)
 Guest::Guest() : creditPoints(10), rating(-1) {}
 
+
+// Checks if the username is already taken by reading the members.csv file
 bool Guest::isUsernameTaken(const string& username) {
     ifstream file("members.csv");
     string line;
-    getline(file, line);
+    getline(file, line);  // Skip header
     while (getline(file, line)) {
         stringstream ss(line);
         string existingUsername;
         getline(ss, existingUsername, ',');
         if (existingUsername == username) {
-            return true;
+            return true; // Username is taken
         }
     }
-    return false;
+    return false; // Username is not taken
 }
 
+// Checks if the phone number is already registered
 bool Guest::isPhoneNumberTaken(const string& phoneNumber) {
     ifstream file("members.csv");
     string line;
-    getline(file, line);
+    getline(file, line); // Skip header
     while (getline(file, line)) {
         stringstream ss(line);
         string field;
         for (int i = 0; i < 3; i++) getline(ss, field, ',');
         if (field == phoneNumber) {
-            return true;
+            return true; // Phone number is taken
         }
     }
-    return false;
+    return false; // Phone number is not taken
 }
 
+// Checks if the email address is already registered
 bool Guest::isEmailTaken(const string& email) {
     ifstream file("members.csv");
     string line;
-    getline(file, line);
+    getline(file, line); // Skip header
     while (getline(file, line)) {
         stringstream ss(line);
         string field;
@@ -55,21 +60,23 @@ bool Guest::isEmailTaken(const string& email) {
     return false;
 }
 
+// Checks if the ID number is already registered
 bool Guest::isIdNumberTaken(const string& idNumber) {
     ifstream file("members.csv");
     string line;
-    getline(file, line);
+    getline(file, line); // Skip header
     while (getline(file, line)) {
         stringstream ss(line);
         string field;
         for (int i = 0; i < 6; i++) getline(ss, field, ',');
         if (field == idNumber) {
-            return true;
+            return true; // ID number is taken
         }
     }
-    return false;
+    return false; // ID number is not taken
 }
 
+// Handles the guest signup function
 void Guest::signup() {
     string input;
     do {
@@ -146,7 +153,7 @@ void Guest::signup() {
     saveToFile();
 }
 
-
+// Displays available carpool listings with a rating filter
 void Guest::viewCarpoolListings() {
     ifstream file("carpool.csv");
     string line;
@@ -174,18 +181,22 @@ void Guest::viewCarpoolListings() {
     }
 }
 
+// Validates if the password meets the minimum length requirement
 bool Guest::isValidPassword(const string& password) {
     return password.length() >= 8;
 }
 
+// Validates if the email contains an '@' symbol, a basic check for email format
 bool Guest::isValidEmail(const string& email) {
     return email.find('@') != string::npos;
 }
 
+// Validates the ID type based on predefined options
 bool Guest::isValidIdType(int idTypeOption) {
     return idTypeOption == 1 || idTypeOption == 2;
 }
 
+// Saves guest details to the members.csv file
 void Guest::saveToFile() const {
     ofstream file("members.csv", ios::app);
     if (file.is_open()) {
